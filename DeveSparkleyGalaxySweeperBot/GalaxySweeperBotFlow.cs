@@ -1,10 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DeveSparkleyGalaxySweeperBot
 {
-    class GalaxySweeperBotFlow
+    public class GalaxySweeperBotFlow
     {
+        public void StartBot()
+        {
+            Console.WriteLine("The bot has started");
+        }
     }
 }
