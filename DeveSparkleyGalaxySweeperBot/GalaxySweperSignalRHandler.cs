@@ -19,11 +19,32 @@ namespace DeveSparkleyGalaxySweeperBot
                 .Build();
         }
 
+        public void HandleGameSweeperGameMessage(GalaxySweeperGame game)
+        {
+            Vakje[,] deVakjesArray = new Vakje[game.field.Count, game.field[0].Length];
+
+            for (int x = 0; x < game.field.Count; x++)
+            {
+                var line = game.field[x];
+                for (int y = 0; y < line.Length; y++)
+                {
+                    var character = line[y];
+                    if (character != '#')
+                    {
+                        var vakje = new Vakje(character);
+                        deVakjesArray[x, y] = vakje;
+                    }
+                }
+            }
+        }
+
         public void StartConnection()
         {
             connection.On<GalaxySweeperGame>("gameUpdated", (game) =>
             {
                 Console.WriteLine($"gameUpdated message ontvangen");
+
+                HandleGameSweeperGameMessage(game);
             });
 
             connection.On<GalaxySweeperGame>("inviteAccepted", (game) =>
