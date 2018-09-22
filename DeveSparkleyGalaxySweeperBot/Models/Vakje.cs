@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DeveSparkleyGalaxySweeperBot.Models
 {
-    class Vakje
+    public class Vakje
     {
         public char Value { get; set; }
         public int Number => IsNumber ? int.Parse(Value.ToString()) : -1;
@@ -16,6 +16,7 @@ namespace DeveSparkleyGalaxySweeperBot.Models
         public Vakje(char value)
         {
             Value = value;
+            SurroundingVakjes = new List<Vakje>();
         }
     }
 }
