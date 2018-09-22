@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,7 +32,7 @@ namespace DeveSparkleyGalaxySweeperBot
                     var character = line[y];
                     if (character != '#')
                     {
-                        var vakje = new Vakje(character);
+                        var vakje = new Vakje(character, x, y);
                         deVakjesArray[x, y] = vakje;
                     }
                 }
@@ -55,12 +56,36 @@ namespace DeveSparkleyGalaxySweeperBot
                         AddVakjeToNeightboursIfNotNull(vakje, deVakjesArray, x - 1, y);
                         AddVakjeToNeightboursIfNotNull(vakje, deVakjesArray, x + 1, y);
                         AddVakjeToNeightboursIfNotNull(vakje, deVakjesArray, x - 1, y + 1);
-                        AddVakjeToNeightboursIfNotNull(vakje, deVakjesArray, x, y + 1);                        
+                        AddVakjeToNeightboursIfNotNull(vakje, deVakjesArray, x, y + 1);
                     }
                 }
             }
 
+            //Nu is alle data goed
 
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    var vakje = deVakjesArray[x, y];
+
+                    if (vakje != null)
+                    {
+
+                        var bommenOmMeHeen = vakje.SurroundingVakjes.Count(t => t.IsBomb);
+                        var unrevealedTilesOmMeHeen = vakje.SurroundingVakjes.Where(t => !t.Revealed).ToList();
+                        if (vakje.IsNumber && vakje.Number - bommenOmMeHeen == unrevealedTilesOmMeHeen.Count)
+                        {
+                            foreach (var unrevealed in unrevealedTilesOmMeHeen)
+                            {
+                                Console.WriteLine($"Dit is een bom: X: {unrevealed.X} Y: {unrevealed.Y}");
+                            }
+                        }
+
+
+                    }
+                }
+            }
         }
 
         public void AddVakjeToNeightboursIfNotNull(Vakje hetVakje, Vakje[,] deVakjesArray, int x, int y)
