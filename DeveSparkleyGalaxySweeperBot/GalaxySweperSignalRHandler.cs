@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -61,6 +63,9 @@ namespace DeveSparkleyGalaxySweeperBot
                 }
             }
 
+
+            var bommenDieIkMoetKlikken = new List<Vakje>();
+
             //Nu is alle data goed
 
             for (int y = 0; y < height; y++)
@@ -79,12 +84,39 @@ namespace DeveSparkleyGalaxySweeperBot
                             foreach (var unrevealed in unrevealedTilesOmMeHeen)
                             {
                                 Console.WriteLine($"Dit is een bom: X: {unrevealed.X} Y: {unrevealed.Y}");
+                                bommenDieIkMoetKlikken.Add(unrevealed);
                             }
                         }
 
 
                     }
                 }
+            }
+
+
+
+
+            var deBom = bommenDieIkMoetKlikken.FirstOrDefault();
+            if (game.myTurn == true && deBom != null)
+            {
+                Sweep(game.id, deBom.X, deBom.Y);
+            }
+
+
+        }
+
+        public void Sweep(string gameId, int row, int column)
+        {
+            //9890b1f2-b87b-4043-ba6a-62037ae921b5
+            string referer = $"https://galaxysweeper.com/game/{gameId}";
+
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+
+                var content = new StringContent("{row: " + row + ", column: " + column + "}", Encoding.UTF8, "application/json");
+                var result = httpClient.PostAsync($"https://galaxysweeper.com/api/games/{gameId}/sweep", content).Result;
             }
         }
 
