@@ -11,7 +11,7 @@ namespace DeveSparkleyGalaxySweeperBot
     public class GalaxySweperSignalRHandler
     {
         private HubConnection connection;
-        private string accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ODhjNWEyMy04MmRkLTRmYmItYWNiZi01MmE3ZWVkOGRiMzgiLCJuYmYiOjE1MzY5MzMwMDksImV4cCI6MTU0MjExNzAwOSwiaWF0IjoxNTM2OTMzMDA5LCJpc3MiOiJodHRwczovL2Rldi5nYWxheHlzd2VlcGVyLmNvbSIsImF1ZCI6Imh0dHBzOi8vZGV2LmdhbGF4eXN3ZWVwZXIuY29tIn0.UMKdleQRzx3L2dQhNtjomfzJJS2FwPhSoaTruPnXYpA";
+        private string accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjYThkM2NhNi03MGY2LTQ3ZTEtOGVhMi1jYWEwMDVjODA0YTAiLCJuYmYiOjE1MzY4Njk3NTAsImV4cCI6MTU0MjA1Mzc1MCwiaWF0IjoxNTM2ODY5NzUwLCJpc3MiOiJodHRwczovL2Rldi5nYWxheHlzd2VlcGVyLmNvbSIsImF1ZCI6Imh0dHBzOi8vZGV2LmdhbGF4eXN3ZWVwZXIuY29tIn0.bvqFlgixfpmAcG_Jb4zhIkNp_GxqDpFLsC5pOyKQCKs";
 
         public GalaxySweperSignalRHandler()
         {
