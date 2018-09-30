@@ -14,11 +14,13 @@ namespace DeveSparkleyGalaxySweeperBot.Models
         public bool IsBomb => Value == 'R' || Value == 'B';
         public bool IsNumber => Revealed == true && IsBomb == false;
         public List<Vakje> SurroundingVakjes { get; set; }
+        public VakjeBerekeningen VakjeBerekeningen { get; set; }
 
         public Vakje(char value, int x, int y)
         {
             Value = value;
             SurroundingVakjes = new List<Vakje>();
+            VakjeBerekeningen = new VakjeBerekeningen();
             X = x;
             Y = y;
         }
