@@ -8,4 +8,10 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="1.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="SampleGameData.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

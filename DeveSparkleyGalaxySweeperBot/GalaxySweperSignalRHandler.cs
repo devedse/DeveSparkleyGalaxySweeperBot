@@ -26,50 +26,15 @@ namespace DeveSparkleyGalaxySweeperBot
 
         public void HandleGameSweeperGameMessage(GalaxySweeperGame game)
         {
-            Vakje[,] deVakjesArray = new Vakje[game.field.Count, game.field[0].Length];
-
-            for (int x = 0; x < game.field.Count; x++)
-            {
-                var line = game.field[x];
-                for (int y = 0; y < line.Length; y++)
-                {
-                    var character = line[y];
-                    if (character != '#')
-                    {
-                        var vakje = new Vakje(character, x, y);
-                        deVakjesArray[x, y] = vakje;
-                    }
-                }
-            }
-
-            LogVakjes(deVakjesArray);
+            var deVakjesArray = CreateVakjesArray(game);
+            LogVakjesDeluxe(deVakjesArray);
 
             int width = deVakjesArray.GetLength(0);
             int height = deVakjesArray.GetLength(1);
 
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    var vakje = deVakjesArray[x, y];
-
-                    if (vakje != null)
-                    {
-                        AddVakjeToNeightboursIfNotNull(vakje, deVakjesArray, x, y - 1);
-                        AddVakjeToNeightboursIfNotNull(vakje, deVakjesArray, x + 1, y - 1);
-                        AddVakjeToNeightboursIfNotNull(vakje, deVakjesArray, x - 1, y);
-                        AddVakjeToNeightboursIfNotNull(vakje, deVakjesArray, x + 1, y);
-                        AddVakjeToNeightboursIfNotNull(vakje, deVakjesArray, x - 1, y + 1);
-                        AddVakjeToNeightboursIfNotNull(vakje, deVakjesArray, x, y + 1);
-                    }
-                }
-            }
-
-
 
 
             //Nu is alle data goed
-
             bool doorGaan = true;
             int hoeveelsteKeer = 0;
             while (doorGaan)
@@ -106,6 +71,48 @@ namespace DeveSparkleyGalaxySweeperBot
 
         }
 
+        public Vakje[,] CreateVakjesArray(GalaxySweeperGame game)
+        {
+            Vakje[,] deVakjesArray = new Vakje[game.field.Count, game.field[0].Length];
+
+            for (int x = 0; x < game.field.Count; x++)
+            {
+                var line = game.field[x];
+                for (int y = 0; y < line.Length; y++)
+                {
+                    var character = line[y];
+                    if (character != '#')
+                    {
+                        var vakje = new Vakje(character, x, y);
+                        deVakjesArray[x, y] = vakje;
+                    }
+                }
+            }
+
+            int width = deVakjesArray.GetLength(0);
+            int height = deVakjesArray.GetLength(1);
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    var vakje = deVakjesArray[x, y];
+
+                    if (vakje != null)
+                    {
+                        AddVakjeToNeightboursIfNotNull(vakje, deVakjesArray, x, y - 1);
+                        AddVakjeToNeightboursIfNotNull(vakje, deVakjesArray, x + 1, y - 1);
+                        AddVakjeToNeightboursIfNotNull(vakje, deVakjesArray, x - 1, y);
+                        AddVakjeToNeightboursIfNotNull(vakje, deVakjesArray, x + 1, y);
+                        AddVakjeToNeightboursIfNotNull(vakje, deVakjesArray, x - 1, y + 1);
+                        AddVakjeToNeightboursIfNotNull(vakje, deVakjesArray, x, y + 1);
+                    }
+                }
+            }
+
+            return deVakjesArray;
+        }
+
         private static bool BepaalBommen(Vakje[,] deVakjesArray, int width, int height)
         {
             bool erIsIetsBerekend = false;
@@ -118,12 +125,6 @@ namespace DeveSparkleyGalaxySweeperBot
 
                     if (vakje != null)
                     {
-                        if (vakje.Number == 1 && vakje.SurroundingVakjes.Any(t => t.Number == 3))
-                        {
-                            Console.WriteLine("NUUU");
-
-                        }
-
                         // || t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom
                         var bommenOmMeHeen = vakje.SurroundingVakjes.Count(t => t.IsBomb);
                         var unrevealedTilesOmMeHeenZonderGuaranteedNoBom = vakje.SurroundingVakjes.Where(t => !t.Revealed && t.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedNoBom).ToList();
@@ -201,7 +202,7 @@ namespace DeveSparkleyGalaxySweeperBot
             return null;
         }
 
-        private void LogVakjes(Vakje[,] deVakjesArray)
+        public void LogVakjes(Vakje[,] deVakjesArray)
         {
             int width = deVakjesArray.GetLength(0);
             int height = deVakjesArray.GetLength(1);
@@ -223,6 +224,47 @@ namespace DeveSparkleyGalaxySweeperBot
                 }
 
                 Console.WriteLine();
+            }
+        }
+
+        public void LogVakjesDeluxe(Vakje[,] deVakjesArray)
+        {
+            int amount = 33;
+
+            var fackString = new char[amount][];
+            for (int i = 0; i < amount; i++)
+            {
+                fackString[i] = "                                 ".ToCharArray();
+
+            }
+
+            int width = deVakjesArray.GetLength(0);
+            int height = deVakjesArray.GetLength(1);
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    var vakje = deVakjesArray[x, y];
+
+                    if (vakje != null)
+                    {
+                        if (y < 44)
+                        {
+
+                            int xResult = x * 2;
+                            int yResult = x - (8 - y) + y;
+
+                            fackString[yResult][xResult] = vakje.Value;
+
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < amount; i++)
+            {
+                Console.WriteLine(new string(fackString[i]));
             }
         }
 
