@@ -27,7 +27,7 @@ namespace DeveSparkleyGalaxySweeperBot
         public void HandleGameSweeperGameMessage(GalaxySweeperGame game)
         {
             var deVakjesArray = CreateVakjesArray(game);
-            LogVakjesDeluxe(deVakjesArray);
+
 
             int width = deVakjesArray.GetLength(0);
             int height = deVakjesArray.GetLength(1);
@@ -54,6 +54,7 @@ namespace DeveSparkleyGalaxySweeperBot
             }
 
             var deBom = bommenDieIkMoetKlikken.FirstOrDefault();
+            LogVakjesDeluxe(deVakjesArray);
 
             if (game.myTurn == true && deBom != null)
             {
@@ -255,7 +256,14 @@ namespace DeveSparkleyGalaxySweeperBot
                             int xResult = x * 2;
                             int yResult = x - (8 - y) + y;
 
-                            fackString[yResult][xResult] = vakje.Value;
+                            if (vakje.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom)
+                            {
+                                fackString[yResult][xResult] = 'G';
+                            }
+                            else
+                            {
+                                fackString[yResult][xResult] = vakje.Value;
+                            }
 
                         }
                     }
@@ -264,7 +272,22 @@ namespace DeveSparkleyGalaxySweeperBot
 
             for (int i = 0; i < amount; i++)
             {
-                Console.WriteLine(new string(fackString[i]));
+                var curString = fackString[i];
+                for (int x = 0; x < curString.Length; x++)
+                {
+                    var curChar = curString[x];
+                    if (curChar == 'G')
+                    {
+                        Console.BackgroundColor = ConsoleColor.Cyan;
+                        Console.Write(curString[x]);
+                        Console.BackgroundColor = ConsoleColor.Black;
+                    }
+                    else
+                    {
+                        Console.Write(curString[x]);
+                    }
+                }
+                Console.WriteLine();
             }
         }
 
