@@ -250,21 +250,16 @@ namespace DeveSparkleyGalaxySweeperBot
 
                     if (vakje != null)
                     {
-                        if (y < 44)
+                        int xResult = x * 2;
+                        int yResult = x - 8 + (2 * y);
+
+                        if (vakje.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom)
                         {
-
-                            int xResult = x * 2;
-                            int yResult = x - (8 - y) + y;
-
-                            if (vakje.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom)
-                            {
-                                fackString[yResult][xResult] = 'G';
-                            }
-                            else
-                            {
-                                fackString[yResult][xResult] = vakje.Value;
-                            }
-
+                            fackString[yResult][xResult] = 'G';
+                        }
+                        else
+                        {
+                            fackString[yResult][xResult] = vakje.Value;
                         }
                     }
                 }
