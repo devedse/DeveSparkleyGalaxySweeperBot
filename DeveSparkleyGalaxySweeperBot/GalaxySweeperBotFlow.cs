@@ -4,10 +4,12 @@ namespace DeveSparkleyGalaxySweeperBot
 {
     public class GalaxySweeperBotFlow
     {
-        private GalaxySweperSignalRHandler signalHandler;
-        public GalaxySweeperBotFlow()
+        private readonly GalaxySweeperApiHelper apiHandler;
+        private readonly GalaxySweeperSignalRHandler signalHandler;
+        public GalaxySweeperBotFlow(string bearerToken)
         {
-            signalHandler = new GalaxySweperSignalRHandler();
+            apiHandler = new GalaxySweeperApiHelper(bearerToken);
+            signalHandler = new GalaxySweeperSignalRHandler(bearerToken, apiHandler);
         }
 
         public void StartBot()

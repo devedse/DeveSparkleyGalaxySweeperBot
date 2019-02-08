@@ -1,12 +1,17 @@
-﻿using DeveSparkleyGalaxySweeperBot.Models;
+﻿using DeveSparkleyGalaxySweeperBot.Config;
+using DeveSparkleyGalaxySweeperBot.Helpers;
+using DeveSparkleyGalaxySweeperBot.Models;
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace DeveSparkleyGalaxySweeperBot.Runner
 {
     public class Program
     {
+
+
         public static void Main(string[] args)
         {
 
@@ -18,8 +23,8 @@ namespace DeveSparkleyGalaxySweeperBot.Runner
 
             Console.WriteLine("Hello World!");
 
-            StartBot();
-            //DoeIetsAnders();
+            //StartBot();
+            DoeIetsAnders().Wait();
 
             Console.WriteLine("Press any key to exit the application");
             Console.ReadKey();
@@ -28,20 +33,28 @@ namespace DeveSparkleyGalaxySweeperBot.Runner
         public static void StartBot()
         {
 
-            var a = new GalaxySweeperBotFlow();
+            var a = new GalaxySweeperBotFlow(GalaxySweeperConfig.AccessToken);
             a.StartBot();
         }
 
-        public static void DoeIetsAnders()
+        public static async Task DoeIetsAnders()
         {
-            var a = new GalaxySweeperBotFlow();
-            var b = new GalaxySweperSignalRHandler();
+            //var a = new GalaxySweeperBotFlow(GalaxySweeperConfig.AccessToken);
+            var ccc = new GalaxySweeperApiHelper(GalaxySweeperConfig.AccessToken);
+            //var b = new GalaxySweeperSignalRHandler(GalaxySweeperConfig.AccessToken, ccc);
             var fakeGame = JsonConvert.DeserializeObject<GalaxySweeperGame>(File.ReadAllText("SampleGameData.txt"));
 
-            var deVakjesArray = b.CreateVakjesArray(fakeGame);
+            var allGames = await ccc.GetGames();
 
 
-            b.LogVakjesDeluxe(deVakjesArray);
+            foreach (var game in allGames)
+            {
+                var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
+                Console.WriteLine($"{game.id}:");
+                GalaxyVisualizator.RenderToConsole(deVakjesArray);
+            }
         }
+
+
     }
 }
