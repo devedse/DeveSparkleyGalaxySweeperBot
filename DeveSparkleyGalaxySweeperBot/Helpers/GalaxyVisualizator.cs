@@ -5,10 +5,10 @@ namespace DeveSparkleyGalaxySweeperBot.Helpers
 {
     public static class GalaxyVisualizator
     {
-        private const int XSpacing = 4;
+        private const int XSpacing = 5;
         private const int YSpacing = 2;
 
-        private const int WidthOfTxt = 71;
+        private const int WidthOfTxt = 88;
         private const int HeightOfTxt = 69;
 
         public static char[][] GenerateEmptyGalaxyString(Vakje[,] deVakjesArray)
@@ -30,7 +30,7 @@ namespace DeveSparkleyGalaxySweeperBot.Helpers
 
                     if (vakje != null)
                     {
-                        int xResult = (x * XSpacing) + (XSpacing / 2);
+                        int xResult = (x * XSpacing) + (XSpacing / 2) + 1;
                         int yResult = (x - 8 + (2 * y)) * YSpacing + (YSpacing / 1);
 
                         FillCellAtThisPoint(fackString, xResult, yResult);
@@ -83,7 +83,7 @@ namespace DeveSparkleyGalaxySweeperBot.Helpers
 
                     if (vakje != null)
                     {
-                        int xResult = (x * XSpacing) + (XSpacing / 2);
+                        int xResult = (x * XSpacing) + (XSpacing / 2) + 1;
                         int yResult = (x - 8 + (2 * y)) * YSpacing + (YSpacing / 1);
 
                         if (vakje.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom)
@@ -137,8 +137,9 @@ namespace DeveSparkleyGalaxySweeperBot.Helpers
 
         public static void FillCellAtThisPoint(char[][] fackString, int xResult, int yResult)
         {
-            fackString[yResult][xResult - 2] = '/';
-            fackString[yResult - 1][xResult - 1] = '/';
+            fackString[yResult][xResult - 3] = '/';
+            fackString[yResult - 1][xResult - 2] = '/';
+            fackString[yResult - 2][xResult - 1] = '_';
             fackString[yResult - 2][xResult] = '_';
             fackString[yResult - 2][xResult + 1] = '_';
             fackString[yResult - 1][xResult + 2] = '\\';
@@ -147,8 +148,9 @@ namespace DeveSparkleyGalaxySweeperBot.Helpers
             fackString[yResult + 2][xResult + 2] = '/';
             fackString[yResult + 2][xResult + 1] = '_';
             fackString[yResult + 2][xResult] = '_';
-            fackString[yResult + 2][xResult - 1] = '\\';
-            fackString[yResult + 1][xResult - 2] = '\\';
+            fackString[yResult + 2][xResult - 1] = '_';
+            fackString[yResult + 2][xResult - 2] = '\\';
+            fackString[yResult + 1][xResult - 3] = '\\';
         }
     }
 }

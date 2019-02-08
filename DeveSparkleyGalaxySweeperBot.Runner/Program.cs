@@ -4,7 +4,6 @@ using DeveSparkleyGalaxySweeperBot.Models;
 using Newtonsoft.Json;
 using System;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace DeveSparkleyGalaxySweeperBot.Runner
 {
@@ -24,7 +23,7 @@ namespace DeveSparkleyGalaxySweeperBot.Runner
             Console.WriteLine("Hello World!");
 
             //StartBot();
-            DoeIetsAnders().Wait();
+            DoeIetsAnders();
 
             Console.WriteLine("Press any key to exit the application");
             Console.ReadKey();
@@ -37,14 +36,14 @@ namespace DeveSparkleyGalaxySweeperBot.Runner
             a.StartBot();
         }
 
-        public static async Task DoeIetsAnders()
+        public static void DoeIetsAnders()
         {
             //var a = new GalaxySweeperBotFlow(GalaxySweeperConfig.AccessToken);
             var ccc = new GalaxySweeperApiHelper(GalaxySweeperConfig.AccessToken);
             //var b = new GalaxySweeperSignalRHandler(GalaxySweeperConfig.AccessToken, ccc);
             var fakeGame = JsonConvert.DeserializeObject<GalaxySweeperGame>(File.ReadAllText("SampleGameData.txt"));
 
-            var allGames = await ccc.GetGames();
+            var allGames = ccc.GetGames().Result;
 
 
             foreach (var game in allGames)
