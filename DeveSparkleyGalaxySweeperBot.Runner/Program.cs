@@ -13,17 +13,10 @@ namespace DeveSparkleyGalaxySweeperBot.Runner
 
         public static void Main(string[] args)
         {
-
-
-
-
-
-
-
             Console.WriteLine("Hello World!");
 
-            //StartBot();
             DoeIetsAnders();
+            StartBot();
 
             Console.WriteLine("Press any key to exit the application");
             Console.ReadKey();
