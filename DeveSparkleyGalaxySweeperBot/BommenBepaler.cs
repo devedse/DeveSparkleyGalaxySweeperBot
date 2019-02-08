@@ -100,45 +100,43 @@ namespace DeveSparkleyGalaxySweeperBot
             alleUnrevealedDieMisschienEenBomZijn = flatVakjes.Where(t => !t.Revealed && t.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedNoBom).ToList();
 
 
-            foreach (var vakje in alleUnrevealedDieMisschienEenBomZijn)
+            var allSets = flatVakjes.SelectMany(t => t.VakjeBerekeningen.Sets).Distinct();
+            //foreach (var vakje in alleUnrevealedDieMisschienEenBomZijn)
+            //{
+
+            foreach (var set in allSets)
             {
-                //var bommenOmMeHeen = vakje.SurroundingVakjes.Count(t => t.IsBomb);
-                //var unrevealedTilesOmMeHeenZonderGuaranteedNoBom = vakje.SurroundingVakjes.Where(t => !t.Revealed && t.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedNoBom).ToList();
-                //var hoeveelBommenNogOmMeHeenTeZoeken = vakje.Number - bommenOmMeHeen;
-
-
-                foreach (var set in vakje.VakjeBerekeningen.Sets)
+                if (set.CountVanBommenDieErMoetenZijn == 3)
                 {
-                    if (set.CountVanBommenDieErMoetenZijn == 3)
+
+                }
+
+                //we kijken nu per set
+                foreach (var vakjeInSet in set.Vakjes)
+                {
+
+                    foreach (var setVanDeze in vakjeInSet.VakjeBerekeningen.Sets)
                     {
+                        //if (set.Vakjes.Intersect(setVanDeze.Vakjes).Count() == setVanDeze.Vakjes.Count)
+                        //{
 
-                    }
-
-                    //we kijken nu per set
-                    foreach (var vakjeInSet in set.Vakjes)
-                    {
-
-                        foreach (var setVanDeze in vakjeInSet.VakjeBerekeningen.Sets)
+                        var vakjesNietInDezeSet = set.Vakjes.Except(setVanDeze.Vakjes).ToList();
+                        if (vakjesNietInDezeSet.Count == set.CountVanBommenDieErMoetenZijn - setVanDeze.CountVanBommenDieErMoetenZijn)
                         {
-                            if (set.Vakjes.Intersect(setVanDeze.Vakjes).Count() == setVanDeze.Vakjes.Count)
+                            foreach (var vakjeNietInDezeSet in vakjesNietInDezeSet)
                             {
-                                var vakjesNietInDezeSet = set.Vakjes.Except(setVanDeze.Vakjes).ToList();
-                                if (vakjesNietInDezeSet.Count == set.CountVanBommenDieErMoetenZijn - setVanDeze.CountVanBommenDieErMoetenZijn)
+                                if (vakjeNietInDezeSet.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedBom)
                                 {
-                                    foreach (var vakjeNietInDezeSet in vakjesNietInDezeSet)
-                                    {
-                                        if (vakjeNietInDezeSet.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedBom)
-                                        {
-                                            vakjeNietInDezeSet.VakjeBerekeningen.BerekendVakjeType = BerekendVakjeType.GuaranteedBom;
-                                            erIsIetsBerekend = true;
-                                        }
-                                    }
+                                    vakjeNietInDezeSet.VakjeBerekeningen.BerekendVakjeType = BerekendVakjeType.GuaranteedBom;
+                                    erIsIetsBerekend = true;
                                 }
                             }
                         }
+                        //}
                     }
                 }
             }
+            //}
 
 
 
