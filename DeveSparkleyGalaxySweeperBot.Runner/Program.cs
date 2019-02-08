@@ -4,6 +4,7 @@ using DeveSparkleyGalaxySweeperBot.Models;
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace DeveSparkleyGalaxySweeperBot.Runner
 {
@@ -39,10 +40,13 @@ namespace DeveSparkleyGalaxySweeperBot.Runner
             var allGames = ccc.GetGames().Result;
 
 
-            foreach (var game in allGames)
+            foreach (var game in allGames.Where(t => !t.isFinished))
             {
                 var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
                 Console.WriteLine($"{game.id}:");
+
+                BommenBepaler.BepaalBommenMulti(deVakjesArray);
+
                 GalaxyVisualizator.RenderToConsole(deVakjesArray);
             }
         }

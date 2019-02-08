@@ -27,20 +27,11 @@ namespace DeveSparkleyGalaxySweeperBot
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
 
-            int width = deVakjesArray.GetLength(0);
-            int height = deVakjesArray.GetLength(1);
 
 
 
             //Nu is alle data goed
-            bool doorGaan = true;
-            int hoeveelsteKeer = 0;
-            while (doorGaan)
-            {
-                doorGaan = BepaalBommen(deVakjesArray, width, height);
-                Console.WriteLine($"{hoeveelsteKeer}: Bommen gevonden: {TwoDimensionalArrayHelper.Flatten(deVakjesArray).Count(t => t != null && t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom)}");
-                hoeveelsteKeer++;
-            }
+            BommenBepaler.BepaalBommenMulti(deVakjesArray);
 
             var alleVakjes = TwoDimensionalArrayHelper.Flatten(deVakjesArray);
 
@@ -78,56 +69,7 @@ namespace DeveSparkleyGalaxySweeperBot
 
         }
 
-
-
-        private static bool BepaalBommen(Vakje[,] deVakjesArray, int width, int height)
-        {
-            bool erIsIetsBerekend = false;
-
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    var vakje = deVakjesArray[x, y];
-
-                    if (vakje != null)
-                    {
-                        // || t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom
-                        var bommenOmMeHeen = vakje.SurroundingVakjes.Count(t => t.IsBomb);
-                        var unrevealedTilesOmMeHeenZonderGuaranteedNoBom = vakje.SurroundingVakjes.Where(t => !t.Revealed && t.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedNoBom).ToList();
-                        if (vakje.IsNumber && vakje.Number - bommenOmMeHeen == unrevealedTilesOmMeHeenZonderGuaranteedNoBom.Count)
-                        {
-                            foreach (var unrevealed in unrevealedTilesOmMeHeenZonderGuaranteedNoBom)
-                            {
-                                if (unrevealed.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedBom)
-                                {
-                                    unrevealed.VakjeBerekeningen.BerekendVakjeType = BerekendVakjeType.GuaranteedBom;
-                                    erIsIetsBerekend = true;
-                                }
-                            }
-                            continue;
-                        }
-
-
-                        var unrevealedTilesOmMeHeen = vakje.SurroundingVakjes.Where(t => !t.Revealed);
-                        if (vakje.IsNumber && vakje.Number == bommenOmMeHeen)
-                        {
-                            foreach (var unrevealed in unrevealedTilesOmMeHeen)
-                            {
-                                if (unrevealed.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedNoBom)
-                                {
-                                    unrevealed.VakjeBerekeningen.BerekendVakjeType = BerekendVakjeType.GuaranteedNoBom;
-                                    erIsIetsBerekend = true;
-                                }
-                            }
-                        }
-
-                    }
-                }
-            }
-
-            return erIsIetsBerekend;
-        }
+      
 
 
 
