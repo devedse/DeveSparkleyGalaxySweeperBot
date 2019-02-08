@@ -94,9 +94,29 @@ namespace DeveSparkleyGalaxySweeperBot.Helpers
                         {
                             fackString[yResult][xResult] = vakje.Value;
                         }
+
+                        if (!vakje.Revealed)
+                        {
+                            if (vakje.VakjeBerekeningen.BerekendeVakjeKans == 1)
+                            {
+                                fackString[yResult + 1][xResult - 1] = '1';
+                                fackString[yResult + 1][xResult] = '0';
+                                fackString[yResult + 1][xResult + 1] = '0';
+                            }
+                            else
+                            {
+                                var chanceString1 = vakje.VakjeBerekeningen.BerekendeVakjeKans.ToString().PadRight(4, '0');
+                                var chanceString2 = chanceString1.Substring(2);
+                                fackString[yResult + 1][xResult] = chanceString2[0];
+                                fackString[yResult + 1][xResult + 1] = chanceString2[1];
+                            }
+                        }
                     }
                 }
             }
+
+
+
 
             for (int i = 0; i < HeightOfTxt; i++)
             {

@@ -35,7 +35,7 @@ namespace DeveSparkleyGalaxySweeperBot
             var theBigUnrevealedSet = new VakjeSet(51 - flatVakjes.Count(t => t.IsBomb), alleUnrevealedDieMisschienEenBomZijn);
             foreach (var unrev in alleUnrevealedDieMisschienEenBomZijn)
             {
-                unrev.VakjeBerekeningen.Sets.Add(theBigUnrevealedSet);
+                unrev.VakjeBerekeningen.TheBigUnrevealedSet = theBigUnrevealedSet;
             }
 
 
@@ -53,6 +53,11 @@ namespace DeveSparkleyGalaxySweeperBot
                         // || t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom
                         var bommenOmMeHeen = vakje.SurroundingVakjes.Count(t => t.IsBomb);
                         var unrevealedTilesOmMeHeenZonderGuaranteedNoBom = vakje.SurroundingVakjes.Where(t => !t.Revealed && t.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedNoBom).ToList();
+
+
+
+                        var unrevealedTilesOmMeHeen = vakje.SurroundingVakjes.Where(t => !t.Revealed).ToList();
+
                         if (vakje.IsNumber && vakje.Number - bommenOmMeHeen == unrevealedTilesOmMeHeenZonderGuaranteedNoBom.Count)
                         {
                             foreach (var unrevealed in unrevealedTilesOmMeHeenZonderGuaranteedNoBom)
@@ -63,12 +68,8 @@ namespace DeveSparkleyGalaxySweeperBot
                                     erIsIetsBerekend = true;
                                 }
                             }
-                            continue;
                         }
-
-
-                        var unrevealedTilesOmMeHeen = vakje.SurroundingVakjes.Where(t => !t.Revealed).ToList();
-                        if (vakje.IsNumber && vakje.Number == bommenOmMeHeen)
+                        else if (vakje.IsNumber && vakje.Number == bommenOmMeHeen)
                         {
                             foreach (var unrevealed in unrevealedTilesOmMeHeen)
                             {
@@ -81,11 +82,13 @@ namespace DeveSparkleyGalaxySweeperBot
                         }
 
 
-
-                        var set = new VakjeSet(vakje.Number - bommenOmMeHeen, unrevealedTilesOmMeHeen);
-                        foreach (var unrevealed in unrevealedTilesOmMeHeen)
+                        if (vakje.IsNumber)
                         {
-                            unrevealed.VakjeBerekeningen.Sets.Add(set);
+                            var set = new VakjeSet(vakje.Number - bommenOmMeHeen, unrevealedTilesOmMeHeenZonderGuaranteedNoBom);
+                            foreach (var unrevealed in unrevealedTilesOmMeHeenZonderGuaranteedNoBom)
+                            {
+                                unrevealed.VakjeBerekeningen.Sets.Add(set);
+                            }
                         }
                     }
                 }

@@ -22,5 +22,10 @@ namespace DeveSparkleyGalaxySweeperBot.Models
             X = x;
             Y = y;
         }
+
+        public override string ToString()
+        {
+            return $"{Value} -> {VakjeBerekeningen.BerekendVakjeType}";
+        }
     }
 }

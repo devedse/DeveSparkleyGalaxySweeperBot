@@ -7,7 +7,7 @@ namespace DeveSparkleyGalaxySweeperBot.Models
         public int CountVanBommenDieErMoetenZijn { get; }
         public List<Vakje> Vakjes { get; } = new List<Vakje>();
 
-        public float BerekendeKansVoorDitSet => CountVanBommenDieErMoetenZijn / (float)Vakjes.Count;
+        public decimal BerekendeKansVoorDitSet => CountVanBommenDieErMoetenZijn / (decimal)Vakjes.Count;
 
         public VakjeSet(int bomCount, List<Vakje> vakjesInSet)
         {

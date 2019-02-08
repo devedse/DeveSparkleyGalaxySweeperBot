@@ -47,6 +47,13 @@ namespace DeveSparkleyGalaxySweeperBot.Runner
 
                 BommenBepaler.BepaalBommenMulti(deVakjesArray);
 
+                var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
+                var ordered = flattened.OrderBy(t => t.VakjeBerekeningen.BerekendeVakjeKans);
+                foreach (var maybeBom in ordered)
+                {
+                    Console.WriteLine($"Bom: ({maybeBom.VakjeBerekeningen.BerekendeVakjeKans}) ({maybeBom.X},{maybeBom.Y})");
+                }
+
                 GalaxyVisualizator.RenderToConsole(deVakjesArray);
             }
         }
