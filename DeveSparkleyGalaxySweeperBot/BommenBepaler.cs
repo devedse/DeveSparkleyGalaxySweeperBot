@@ -42,58 +42,148 @@ namespace DeveSparkleyGalaxySweeperBot
 
             bool erIsIetsBerekend = false;
 
-            for (int y = 0; y < height; y++)
+            foreach (var vakje in flatVakjes)
             {
-                for (int x = 0; x < width; x++)
+                // || t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom
+                var bommenOmMeHeen = vakje.SurroundingVakjes.Count(t => t.IsBomb);
+                var unrevealedTilesOmMeHeenZonderGuaranteedNoBom = vakje.SurroundingVakjes.Where(t => !t.Revealed && t.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedNoBom).ToList();
+
+                var unrevealedTilesOmMeHeen = vakje.SurroundingVakjes.Where(t => !t.Revealed).ToList();
+
+                if (vakje.IsNumber && vakje.Number - bommenOmMeHeen == unrevealedTilesOmMeHeenZonderGuaranteedNoBom.Count)
                 {
-                    var vakje = deVakjesArray[x, y];
-
-                    if (vakje != null)
+                    foreach (var unrevealed in unrevealedTilesOmMeHeenZonderGuaranteedNoBom)
                     {
-                        // || t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom
-                        var bommenOmMeHeen = vakje.SurroundingVakjes.Count(t => t.IsBomb);
-                        var unrevealedTilesOmMeHeenZonderGuaranteedNoBom = vakje.SurroundingVakjes.Where(t => !t.Revealed && t.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedNoBom).ToList();
-
-
-
-                        var unrevealedTilesOmMeHeen = vakje.SurroundingVakjes.Where(t => !t.Revealed).ToList();
-
-                        if (vakje.IsNumber && vakje.Number - bommenOmMeHeen == unrevealedTilesOmMeHeenZonderGuaranteedNoBom.Count)
+                        if (unrevealed.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedBom)
                         {
-                            foreach (var unrevealed in unrevealedTilesOmMeHeenZonderGuaranteedNoBom)
-                            {
-                                if (unrevealed.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedBom)
-                                {
-                                    unrevealed.VakjeBerekeningen.BerekendVakjeType = BerekendVakjeType.GuaranteedBom;
-                                    erIsIetsBerekend = true;
-                                }
-                            }
+                            unrevealed.VakjeBerekeningen.BerekendVakjeType = BerekendVakjeType.GuaranteedBom;
+                            erIsIetsBerekend = true;
                         }
-                        else if (vakje.IsNumber && vakje.Number == bommenOmMeHeen)
+                    }
+                }
+                else if (vakje.IsNumber && vakje.Number == bommenOmMeHeen)
+                {
+                    foreach (var unrevealed in unrevealedTilesOmMeHeen)
+                    {
+                        if (unrevealed.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedNoBom)
                         {
-                            foreach (var unrevealed in unrevealedTilesOmMeHeen)
-                            {
-                                if (unrevealed.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedNoBom)
-                                {
-                                    unrevealed.VakjeBerekeningen.BerekendVakjeType = BerekendVakjeType.GuaranteedNoBom;
-                                    erIsIetsBerekend = true;
-                                }
-                            }
+                            unrevealed.VakjeBerekeningen.BerekendVakjeType = BerekendVakjeType.GuaranteedNoBom;
+                            erIsIetsBerekend = true;
                         }
+                    }
+                }
+            }
 
 
-                        if (vakje.IsNumber)
+            foreach (var vakje in flatVakjes)
+            {
+                if (vakje.IsNumber)
+                {
+                    var bommenOmMeHeen = vakje.SurroundingVakjes.Count(t => t.IsBomb);
+                    var unrevealedTilesOmMeHeenZonderGuaranteedNoBom = vakje.SurroundingVakjes.Where(t => !t.Revealed && t.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedNoBom).ToList();
+                    var unrevealedTilesOmMeHeen = vakje.SurroundingVakjes.Where(t => !t.Revealed).ToList();
+
+                    var set = new VakjeSet(vakje.Number - bommenOmMeHeen, unrevealedTilesOmMeHeenZonderGuaranteedNoBom);
+                    foreach (var unrevealed in unrevealedTilesOmMeHeenZonderGuaranteedNoBom)
+                    {
+                        unrevealed.VakjeBerekeningen.Sets.Add(set);
+                    }
+                }
+            }
+
+
+
+
+
+
+
+            alleUnrevealedDieMisschienEenBomZijn = flatVakjes.Where(t => !t.Revealed && t.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedNoBom).ToList();
+
+
+            foreach (var vakje in alleUnrevealedDieMisschienEenBomZijn)
+            {
+                //var bommenOmMeHeen = vakje.SurroundingVakjes.Count(t => t.IsBomb);
+                //var unrevealedTilesOmMeHeenZonderGuaranteedNoBom = vakje.SurroundingVakjes.Where(t => !t.Revealed && t.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedNoBom).ToList();
+                //var hoeveelBommenNogOmMeHeenTeZoeken = vakje.Number - bommenOmMeHeen;
+
+
+                foreach (var set in vakje.VakjeBerekeningen.Sets)
+                {
+                    if (set.CountVanBommenDieErMoetenZijn == 3)
+                    {
+
+                    }
+
+                    //we kijken nu per set
+                    foreach (var vakjeInSet in set.Vakjes)
+                    {
+
+                        foreach (var setVanDeze in vakjeInSet.VakjeBerekeningen.Sets)
                         {
-                            var set = new VakjeSet(vakje.Number - bommenOmMeHeen, unrevealedTilesOmMeHeenZonderGuaranteedNoBom);
-                            foreach (var unrevealed in unrevealedTilesOmMeHeenZonderGuaranteedNoBom)
+                            if (set.Vakjes.Intersect(setVanDeze.Vakjes).Count() == setVanDeze.Vakjes.Count)
                             {
-                                unrevealed.VakjeBerekeningen.Sets.Add(set);
+                                var vakjesNietInDezeSet = set.Vakjes.Except(setVanDeze.Vakjes).ToList();
+                                if (vakjesNietInDezeSet.Count == set.CountVanBommenDieErMoetenZijn - setVanDeze.CountVanBommenDieErMoetenZijn)
+                                {
+                                    foreach (var vakjeNietInDezeSet in vakjesNietInDezeSet)
+                                    {
+                                        if (vakjeNietInDezeSet.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedBom)
+                                        {
+                                            vakjeNietInDezeSet.VakjeBerekeningen.BerekendVakjeType = BerekendVakjeType.GuaranteedBom;
+                                            erIsIetsBerekend = true;
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
 
+
+
+            //foreach (var vakje in flatVakjes)
+            //{
+            //    if (vakje.IsNumber)
+            //    {
+
+
+            //        var bommenOmMeHeen = vakje.SurroundingVakjes.Count(t => t.IsBomb);
+            //        var unrevealedTilesOmMeHeenZonderGuaranteedNoBom = vakje.SurroundingVakjes.Where(t => !t.Revealed && t.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedNoBom).ToList();
+            //        var hoeveelBommenNogOmMeHeenTeZoeken = vakje.Number - bommenOmMeHeen;
+
+
+            //        var setsOmMijHeen = vakje.SurroundingVakjes.SelectMany(t => t.VakjeBerekeningen.Sets).ToList();
+
+            //        foreach (var vakjeErOmheen in unrevealedTilesOmMeHeenZonderGuaranteedNoBom)
+            //        {
+            //            if (vakje.Number == 3 && vakjeErOmheen.SurroundingVakjes.Any(t => t.Number == 3) && vakjeErOmheen.SurroundingVakjes.Count(t => !t.Revealed) == 4)
+            //            {
+
+            //            }
+
+            //            foreach (var set in setsOmMijHeen)
+            //            {
+            //                var tilesDieNietInSetZittenMaarWelInEromheen = unrevealedTilesOmMeHeenZonderGuaranteedNoBom.Except(set.Vakjes).ToList();
+
+
+            //                //Vind set waar deze tile niet in zit
+            //                if (tilesDieNietInSetZittenMaarWelInEromheen.Count > 0)
+            //                {
+            //                    //Zoek een set waar het aantal bommen to find hetzelfde is als de vakjes niet in die set
+            //                    if (hoeveelBommenNogOmMeHeenTeZoeken - set.CountVanBommenDieErMoetenZijn == tilesDieNietInSetZittenMaarWelInEromheen.Count)
+            //                    {
+            //                        foreach (var tileEromheen in tilesDieNietInSetZittenMaarWelInEromheen)
+            //                        {
+            //                            //tileEromheen.VakjeBerekeningen.BerekendVakjeType = BerekendVakjeType.GuaranteedBom;
+            //                        }
+            //                    }
+            //                }
+
+            //            }
+            //        }
+            //    }
+            //}
             return erIsIetsBerekend;
         }
     }

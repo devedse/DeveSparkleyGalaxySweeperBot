@@ -1,5 +1,6 @@
 ﻿using DeveSparkleyGalaxySweeperBot.Models;
 using System;
+using System.Diagnostics;
 
 namespace DeveSparkleyGalaxySweeperBot.Helpers
 {
@@ -126,32 +127,45 @@ namespace DeveSparkleyGalaxySweeperBot.Helpers
                     var curChar = curString[x];
                     if (curChar == 'G')
                     {
-                        Console.BackgroundColor = ConsoleColor.Cyan;
-                        Console.Write(curString[x]);
-                        Console.BackgroundColor = ConsoleColor.Black;
+                        ConsoleWrite(curString[x], ConsoleColor.Cyan);
                     }
                     else if (curChar == '.')
                     {
-                        Console.Write(curString[x]);
+                        ConsoleWrite(curString[x]);
                     }
                     else if (char.IsDigit(curChar))
                     {
-                        Console.BackgroundColor = ConsoleColor.DarkBlue;
-                        Console.Write(curString[x]);
-                        Console.BackgroundColor = ConsoleColor.Black;
+                        ConsoleWrite(curString[x], ConsoleColor.DarkBlue);
                     }
                     else if (curChar == 'R' || curChar == 'B')
                     {
-                        Console.BackgroundColor = ConsoleColor.Red;
-                        Console.Write(curString[x]);
-                        Console.BackgroundColor = ConsoleColor.Black;
+                        ConsoleWrite(curString[x], ConsoleColor.Red);
                     }
                     else
                     {
-                        Console.Write(curString[x]);
+                        ConsoleWrite(curString[x]);
                     }
                 }
-                Console.WriteLine();
+                ConsoleWrite(Environment.NewLine);
+            }
+        }
+
+        public static void ConsoleWrite(char txt, ConsoleColor color = ConsoleColor.Black)
+        {
+            ConsoleWrite(txt.ToString());
+        }
+
+        public static void ConsoleWrite(string txt, ConsoleColor color = ConsoleColor.Black)
+        {
+            if (Console.BackgroundColor != color)
+            {
+                Console.BackgroundColor = color;
+            }
+            Debug.Write(txt.ToString());
+            Console.Write(txt);
+            if (Console.BackgroundColor != ConsoleColor.Black)
+            {
+                Console.BackgroundColor = ConsoleColor.Black;
             }
         }
 

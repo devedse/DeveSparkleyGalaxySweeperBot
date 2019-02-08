@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeveSparkleyGalaxySweeperBo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeveSparkleyGalaxySweeperBot.Runner", "DeveSparkleyGalaxySweeperBot.Runner\DeveSparkleyGalaxySweeperBot.Runner.csproj", "{506057F3-CC4C-4231-A938-FCD3A2F07FC4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeveSparkleyGalaxySweeperBot.Tests", "DeveSparkleyGalaxySweeperBot.Tests\DeveSparkleyGalaxySweeperBot.Tests.csproj", "{9666B80B-99DC-4CE6-AEF2-14512F579C17}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{506057F3-CC4C-4231-A938-FCD3A2F07FC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{506057F3-CC4C-4231-A938-FCD3A2F07FC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{506057F3-CC4C-4231-A938-FCD3A2F07FC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9666B80B-99DC-4CE6-AEF2-14512F579C17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9666B80B-99DC-4CE6-AEF2-14512F579C17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9666B80B-99DC-4CE6-AEF2-14512F579C17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9666B80B-99DC-4CE6-AEF2-14512F579C17}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
