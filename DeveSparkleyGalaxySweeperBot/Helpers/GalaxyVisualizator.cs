@@ -69,7 +69,7 @@ namespace DeveSparkleyGalaxySweeperBot.Helpers
         }
 
 
-        public static void RenderToConsole(Vakje[,] deVakjesArray)
+        public static void RenderToConsole(Vakje[,] deVakjesArray, bool asDebug = false)
         {
             int width = deVakjesArray.GetLength(0);
             int height = deVakjesArray.GetLength(1);
@@ -127,45 +127,51 @@ namespace DeveSparkleyGalaxySweeperBot.Helpers
                     var curChar = curString[x];
                     if (curChar == 'G')
                     {
-                        ConsoleWrite(curString[x], ConsoleColor.Cyan);
+                        ConsoleWrite(asDebug, curString[x], ConsoleColor.Cyan);
                     }
                     else if (curChar == '.')
                     {
-                        ConsoleWrite(curString[x]);
+                        ConsoleWrite(asDebug, curString[x]);
                     }
                     else if (char.IsDigit(curChar))
                     {
-                        ConsoleWrite(curString[x], ConsoleColor.DarkBlue);
+                        ConsoleWrite(asDebug, curString[x], ConsoleColor.DarkBlue);
                     }
                     else if (curChar == 'R' || curChar == 'B')
                     {
-                        ConsoleWrite(curString[x], ConsoleColor.Red);
+                        ConsoleWrite(asDebug, curString[x], ConsoleColor.Red);
                     }
                     else
                     {
-                        ConsoleWrite(curString[x]);
+                        ConsoleWrite(asDebug, curString[x]);
                     }
                 }
-                ConsoleWrite(Environment.NewLine);
+                ConsoleWrite(asDebug, Environment.NewLine);
             }
         }
 
-        public static void ConsoleWrite(char txt, ConsoleColor color = ConsoleColor.Black)
+        public static void ConsoleWrite(bool asDebug, char txt, ConsoleColor color = ConsoleColor.Black)
         {
-            ConsoleWrite(txt.ToString());
+            ConsoleWrite(asDebug, txt.ToString(), color);
         }
 
-        public static void ConsoleWrite(string txt, ConsoleColor color = ConsoleColor.Black)
+        public static void ConsoleWrite(bool asDebug, string txt, ConsoleColor color = ConsoleColor.Black)
         {
-            if (Console.BackgroundColor != color)
+            if (asDebug)
             {
-                Console.BackgroundColor = color;
+                Debug.Write(txt.ToString());
             }
-            Debug.Write(txt.ToString());
-            Console.Write(txt);
-            if (Console.BackgroundColor != ConsoleColor.Black)
+            else
             {
-                Console.BackgroundColor = ConsoleColor.Black;
+                if (Console.BackgroundColor != color)
+                {
+                    Console.BackgroundColor = color;
+                }
+                Console.Write(txt);
+                if (Console.BackgroundColor != ConsoleColor.Black)
+                {
+                    Console.BackgroundColor = ConsoleColor.Black;
+                }
             }
         }
 

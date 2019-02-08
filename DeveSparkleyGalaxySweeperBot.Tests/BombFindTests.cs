@@ -48,7 +48,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             Assert.Equal(2, flattened.Count(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom));
 
-            GalaxyVisualizator.RenderToConsole(deVakjesArray);
+            GalaxyVisualizator.RenderToConsole(deVakjesArray, true);
         }
 
         [Fact]
@@ -91,7 +91,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             Assert.Equal(1, flattened.Count(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom));
 
-            GalaxyVisualizator.RenderToConsole(deVakjesArray);
+            GalaxyVisualizator.RenderToConsole(deVakjesArray, true);
         }
     }
 }
