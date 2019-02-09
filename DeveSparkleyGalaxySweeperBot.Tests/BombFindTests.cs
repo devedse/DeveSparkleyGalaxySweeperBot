@@ -93,5 +93,49 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             GalaxyVisualizator.RenderToConsole(deVakjesArray, true);
         }
+
+
+        [Fact]
+        public void EnsureDoesntFindFalsePositives()
+        {
+            string[] data = new[] { "########.........",
+                                    "#######..........",
+                                    "######...........",
+                                    "#####............",
+                                    "####.............",
+                                    "###..............",
+                                    "##...............",
+                                    "#................",
+                                    ".................",
+                                    "........122.....#",
+                                    "........1......##",
+                                    "..............###",
+                                    ".............####",
+                                    "............#####",
+                                    "...........######",
+                                    "..........#######",
+                                    ".........########"};
+
+
+            var game = new GalaxySweeperGame
+            {
+                field = data.ToList()
+            };
+
+            var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
+
+            BommenBepaler.BepaalBommenMulti(deVakjesArray);
+
+            var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
+            var ordered = flattened.OrderBy(t => t.VakjeBerekeningen.BerekendeVakjeKans);
+            foreach (var maybeBom in ordered)
+            {
+                Debug.WriteLine($"Bom: ({maybeBom.VakjeBerekeningen.BerekendeVakjeKans}) ({maybeBom.X},{maybeBom.Y})");
+            }
+
+            Assert.Equal(0, flattened.Count(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom));
+
+            GalaxyVisualizator.RenderToConsole(deVakjesArray, true);
+        }
     }
 }
