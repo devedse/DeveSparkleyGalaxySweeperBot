@@ -9,9 +9,7 @@
 
             var multiLogger = new MultiLogger(consoleLogger, debugLogger);
 
-            var dateTimeLogger = new DateTimeLogger(multiLogger);
-
-            var cacheAsLinesLogger = new CacheAsLinesLogger(dateTimeLogger);
+            var cacheAsLinesLogger = new CacheAsLinesLogger(multiLogger);
 
             return cacheAsLinesLogger;
         }
