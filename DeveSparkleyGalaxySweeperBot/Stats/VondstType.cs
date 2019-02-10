@@ -5,6 +5,6 @@
         SimpleGuaranteedBomb,
         SimpleGuaranteedNoBomb,
         SetsBasedGuaranteedBomb,
-        SetsBasedGuaranteedNoBomb
+        SetsBasedGuaranteedNoBomb,
     }
 }

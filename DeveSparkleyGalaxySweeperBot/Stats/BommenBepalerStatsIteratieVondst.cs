@@ -6,11 +6,13 @@ namespace DeveSparkleyGalaxySweeperBot.Stats
 {
     public class BommenBepalerStatsIteratieVondst
     {
+        public BommenBepalerStatsIteratie Iteratie { get; }
         public Vakje Vakje { get; }
         public VondstType VondstType { get; }
 
-        public BommenBepalerStatsIteratieVondst(Vakje vakje, VondstType vondstType)
+        public BommenBepalerStatsIteratieVondst(BommenBepalerStatsIteratie iteratie, Vakje vakje, VondstType vondstType)
         {
+            Iteratie = iteratie;
             Vakje = vakje;
             VondstType = vondstType;
         }

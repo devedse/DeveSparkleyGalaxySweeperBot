@@ -22,16 +22,9 @@ namespace DeveSparkleyGalaxySweeperBot.Stats
             }
         }
 
-        public string CreateLogStringVanWaarDezeGevondenIs(Vakje vakje)
+        public BommenBepalerStatsIteratieVondst GetVondstVoorVakje(Vakje vakje)
         {
-            foreach (var iteratie in Iteraties)
-            {
-                foreach (var vondst in iteratie.Vondsten.Where(t => t.Vakje == vakje))
-                {
-                    return $"\t\t Gevonden in iteratie {iteratie.IteratieNummer}. Type: {vondst.VondstType}";
-                }
-            }
-            return string.Empty;
+            return Iteraties.SelectMany(t => t.Vondsten).FirstOrDefault(t => t.Vakje == vakje);
         }
     }
 }

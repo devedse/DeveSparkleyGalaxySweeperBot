@@ -1,6 +1,7 @@
 ﻿using DeveSparkleyGalaxySweeperBot.Helpers;
 using DeveSparkleyGalaxySweeperBot.Logging;
 using DeveSparkleyGalaxySweeperBot.Models;
+using DeveSparkleyGalaxySweeperBot.Stats;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Linq;
@@ -47,12 +48,29 @@ namespace DeveSparkleyGalaxySweeperBot
             logger.WriteLine("Best chance bombs (top 5):");
             foreach (var maybeBom in potentialBombs.Take(5))
             {
-                var stringToLog = $"\t{maybeBom.ToString()}";
+                logger.Write($"\t{maybeBom.ToString()}");
                 if (maybeBom.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom)
                 {
-                    stringToLog += stats.CreateLogStringVanWaarDezeGevondenIs(maybeBom);
+                    var vondst = stats.GetVondstVoorVakje(maybeBom);
+                    if (vondst != null)
+                    {
+                        ConsoleColor c = ConsoleColor.DarkGreen;
+
+                        if (vondst.Vakje.SurroundingVakjes.Any(t => stats.GetVondstVoorVakje(t)?.VondstType == VondstType.SetsBasedGuaranteedNoBomb))
+                        {
+                            c = ConsoleColor.DarkYellow;
+                        }
+
+                        if (vondst.VondstType == VondstType.SetsBasedGuaranteedBomb)
+                        {
+                            c = ConsoleColor.Magenta;
+                        }
+
+
+                        logger.Write($"\t\t Gevonden in iteratie {vondst.Iteratie.IteratieNummer}. Type: {vondst.VondstType}", c);
+                    }
                 }
-                logger.WriteLine(stringToLog);
+                logger.WriteLine("");
             }
             logger.WriteLine(string.Empty);
 
@@ -71,6 +89,7 @@ namespace DeveSparkleyGalaxySweeperBot
                 logger.WriteLine($"Beste keuze (Guaranteed bom): {deBom}", ConsoleColor.DarkGreen);
                 if (game.myTurn)
                 {
+                    logger.WriteLine("Sweeping...", ConsoleColor.Red);
                     apiHelper.Sweep(game.id, deBom.X, deBom.Y);
                 }
             }
@@ -82,6 +101,7 @@ namespace DeveSparkleyGalaxySweeperBot
                     logger.WriteLine($"Beste keuze (Vakje met bom ernaast): {hetVakjeWatWeGaanKlikken}", ConsoleColor.DarkCyan);
                     if (game.myTurn)
                     {
+                        logger.WriteLine("Sweeping...", ConsoleColor.Red);
                         apiHelper.Sweep(game.id, hetVakjeWatWeGaanKlikken.X, hetVakjeWatWeGaanKlikken.Y);
                     }
                 }
@@ -91,6 +111,7 @@ namespace DeveSparkleyGalaxySweeperBot
                     logger.WriteLine($"Beste keuze (Hoogste kans): {hetVakjeWatWeGaanKlikken}", ConsoleColor.DarkBlue);
                     if (game.myTurn)
                     {
+                        logger.WriteLine("Sweeping...", ConsoleColor.Red);
                         apiHelper.Sweep(game.id, hetVakjeWatWeGaanKlikken.X, hetVakjeWatWeGaanKlikken.Y);
                     }
                 }

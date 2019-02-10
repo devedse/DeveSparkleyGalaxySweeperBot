@@ -65,7 +65,7 @@ namespace DeveSparkleyGalaxySweeperBot
                         if (unrevealed.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedBom)
                         {
                             unrevealed.VakjeBerekeningen.BerekendVakjeType = BerekendVakjeType.GuaranteedBom;
-                            iteratie.Vondsten.Add(new BommenBepalerStatsIteratieVondst(unrevealed, VondstType.SimpleGuaranteedBomb));
+                            iteratie.Vondsten.Add(new BommenBepalerStatsIteratieVondst(iteratie, unrevealed, VondstType.SimpleGuaranteedBomb));
                         }
                     }
                 }
@@ -76,7 +76,7 @@ namespace DeveSparkleyGalaxySweeperBot
                         if (unrevealed.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedNoBom)
                         {
                             unrevealed.VakjeBerekeningen.BerekendVakjeType = BerekendVakjeType.GuaranteedNoBom;
-                            iteratie.Vondsten.Add(new BommenBepalerStatsIteratieVondst(unrevealed, VondstType.SimpleGuaranteedNoBomb));
+                            iteratie.Vondsten.Add(new BommenBepalerStatsIteratieVondst(iteratie, unrevealed, VondstType.SimpleGuaranteedNoBomb));
                         }
                     }
                 }
@@ -125,7 +125,7 @@ namespace DeveSparkleyGalaxySweeperBot
                                 if (vakjeNietGedeeld.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedNoBom)
                                 {
                                     vakjeNietGedeeld.VakjeBerekeningen.BerekendVakjeType = BerekendVakjeType.GuaranteedNoBom;
-                                    iteratie.Vondsten.Add(new BommenBepalerStatsIteratieVondst(vakjeNietGedeeld, VondstType.SetsBasedGuaranteedNoBomb));
+                                    iteratie.Vondsten.Add(new BommenBepalerStatsIteratieVondst(iteratie, vakjeNietGedeeld, VondstType.SetsBasedGuaranteedNoBomb));
                                 }
                             }
                         }
@@ -141,7 +141,7 @@ namespace DeveSparkleyGalaxySweeperBot
                                     if (vakjeNietGedeeld.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedBom)
                                     {
                                         vakjeNietGedeeld.VakjeBerekeningen.BerekendVakjeType = BerekendVakjeType.GuaranteedBom;
-                                        iteratie.Vondsten.Add(new BommenBepalerStatsIteratieVondst(vakjeNietGedeeld, VondstType.SetsBasedGuaranteedBomb));
+                                        iteratie.Vondsten.Add(new BommenBepalerStatsIteratieVondst(iteratie, vakjeNietGedeeld, VondstType.SetsBasedGuaranteedBomb));
                                     }
                                 }
                             }

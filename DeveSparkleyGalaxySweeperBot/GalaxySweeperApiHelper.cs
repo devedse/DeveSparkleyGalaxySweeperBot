@@ -34,7 +34,7 @@ namespace DeveSparkleyGalaxySweeperBot
             //9890b1f2-b87b-4043-ba6a-62037ae921b5
             string referer = $"https://galaxysweeper.com/game/{gameId}";
 
-
+            Task.Delay(2000).Wait();
 
             var content = new StringContent("{row: " + row + ", column: " + column + "}", Encoding.UTF8, "application/json");
             var result = _httpClient.PostAsync($"https://galaxysweeper.com/api/games/{gameId}/sweep", content).Result;
