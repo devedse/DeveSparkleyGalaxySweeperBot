@@ -231,7 +231,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
         }
 
         [Fact]
-        public void FindsSetsWithGuaranteedBombs3()
+        public void EnsureDoesntFindFalsePositives3()
         {
             var logger = DefaultLoggerFactory.CreateLoggerForTests();
 
@@ -269,7 +269,49 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
             LogTopBombs(flattened, logger);
             GalaxyVisualizator.RenderToConsole(deVakjesArray, logger);
 
-            Assert.Equal(5, flattened.Count(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom));
+            Assert.Equal(0, flattened.Count(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom));
+        }
+
+        [Fact]
+        public void FindsSetsWithGuaranteedBombs4()
+        {
+            var logger = DefaultLoggerFactory.CreateLoggerForTests();
+
+            string[] data = new[] { "########.........",
+                                    "#######..........",
+                                    "######...........",
+                                    "#####............",
+                                    "####.............",
+                                    "###..............",
+                                    "##...............",
+                                    "#................",
+                                    "...........1.....",
+                                    "........12......#",
+                                    "........11.....##",
+                                    "..............###",
+                                    ".............####",
+                                    "............#####",
+                                    "...........######",
+                                    "..........#######",
+                                    ".........########"};
+
+
+            var game = new GalaxySweeperGame
+            {
+                field = data.ToList()
+            };
+
+            var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
+
+            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
+            stats.Log(logger);
+
+            var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
+
+            LogTopBombs(flattened, logger);
+            GalaxyVisualizator.RenderToConsole(deVakjesArray, logger);
+
+            Assert.Equal(1, flattened.Count(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom));
         }
 
         [Fact]
@@ -277,63 +319,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
         {
             var logger = DefaultLoggerFactory.CreateLoggerForTests();
 
-            //string[] data = new[] { "########B3..1.B10",
-            //                        "#######BRR2.B3310",
-            //                        "######1233BR3BR10",
-            //                        "#####001B.2..B200",
-            //                        "####0002B..R21000",
-            //                        "###210013B2100001",
-            //                        "##BB101.R3000001R",
-            //                        "#.3201B3R1000002.",
-            //                        "..R102..1111112R.",
-            //                        ".1.12B2..R.R.R.1#",
-            //                        "...R.3RB21.2RB.##",
-            //                        "...1..3.....R2###",
-            //                        "....B3..BB12.####",
-            //                        "...B3R.B3..R#####",
-            //                        ".....1.2..2######",
-            //                        "..........#######",
-            //                        ".........########" };
-
-            //string[] data = new[] { "########B3..1.B10",
-            //                        "#######BRR2.B3310",
-            //                        "######1233BR3BR10",
-            //                        "#####001B.2..B200",
-            //                        "####0002B..R21000",
-            //                        "###210013B2100001",
-            //                        "##BB101.R3000001R",
-            //                        "#.3201B3R1000002.",
-            //                        "..R102..1111112R.",
-            //                        ".1.12B2..R.R.R.1#",
-            //                        "...R.3RB21.2RB.##",
-            //                        "...1..3.....R2###",
-            //                        "....B3..BB12.####",
-            //                        "...B3R..3..R#####",
-            //                        ".....1.2..2######",
-            //                        "..........#######",
-            //                        ".........########" };
-
-
-            //Deze werkt nog wel goed
-            //string[] data = new[] { "########B3..1.B10",
-            //                        "#######BRR2.B3310",
-            //                        "######1233BR3BR10",
-            //                        "#####001B.2..B200",
-            //                        "####0002B..R21000",
-            //                        "###210013B2100001",
-            //                        "##BB101.R3000001R",
-            //                        "#.3201B3R1000002.",
-            //                        "..R102..1111112R.",
-            //                        ".1.12B2..R.R.R.1#",
-            //                        "...R.3RB21.2RB.##",
-            //                        "...1.R3.....R2###",
-            //                        "....B3..BB12.####",
-            //                        "...B3R..3..R#####",
-            //                        ".....1.2..2######",
-            //                        "..........#######",
-            //                        ".........########" };
-
-            //Hier vind hij allemaal random bommen
+            //Hier vond hij random bommen
             string[] data = new[] { "########B3..1.B10",
                                     "#######BRR2.B3310",
                                     "######1233BR3BR10",
@@ -376,8 +362,6 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
         {
             var logger = DefaultLoggerFactory.CreateLoggerForTests();
 
-
-
             string[] data = new[] { "########.........",
                                     "#######..........",
                                     "######...........",
@@ -413,6 +397,172 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
             GalaxyVisualizator.RenderToConsole(deVakjesArray, logger);
 
             Assert.Equal(0, flattened.Count(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom));
+        }
+
+        [Fact]
+        public void DoesntFindAllTheseFalsePositives3()
+        {
+            var logger = DefaultLoggerFactory.CreateLoggerForTests();
+
+            string[] data = new[] { "########.........",
+                                    "#######..........",
+                                    "######...........",
+                                    "#####............",
+                                    "####.............",
+                                    "###..............",
+                                    "##...............",
+                                    "#................",
+                                    ".........33......",
+                                    "................#",
+                                    "...............##",
+                                    "..............###",
+                                    ".............####",
+                                    "............#####",
+                                    "...........######",
+                                    "..........#######",
+                                    ".........########"};
+
+
+            var game = new GalaxySweeperGame
+            {
+                field = data.ToList()
+            };
+
+            var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
+
+            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
+            stats.Log(logger);
+
+            var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
+
+            LogTopBombs(flattened, logger);
+            GalaxyVisualizator.RenderToConsole(deVakjesArray, logger);
+
+            Assert.Equal(0, flattened.Count(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom));
+        }
+
+        [Fact]
+        public void DoesntFindAllTheseFalsePositives4()
+        {
+            var logger = DefaultLoggerFactory.CreateLoggerForTests();
+
+            string[] data = new[] { "########.........",
+                                    "#######..........",
+                                    "######...........",
+                                    "#####............",
+                                    "####.............",
+                                    "###..............",
+                                    "##...............",
+                                    "#................",
+                                    ".........44......",
+                                    "................#",
+                                    "...............##",
+                                    "..............###",
+                                    ".............####",
+                                    "............#####",
+                                    "...........######",
+                                    "..........#######",
+                                    ".........########"};
+
+
+            var game = new GalaxySweeperGame
+            {
+                field = data.ToList()
+            };
+
+            var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
+
+            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
+            stats.Log(logger);
+
+            var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
+
+            LogTopBombs(flattened, logger);
+            GalaxyVisualizator.RenderToConsole(deVakjesArray, logger);
+
+            Assert.Equal(0, flattened.Count(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom));
+        }
+
+        [Fact]
+        public void DoesntFindAllTheseFalsePositives5()
+        {
+            var logger = DefaultLoggerFactory.CreateLoggerForTests();
+
+            string[] data = new[] { "########.........",
+                                    "#######..........",
+                                    "######...........",
+                                    "#####............",
+                                    "####.............",
+                                    "###..............",
+                                    "##...............",
+                                    "#................",
+                                    ".........55......",
+                                    "................#",
+                                    "...............##",
+                                    "..............###",
+                                    ".............####",
+                                    "............#####",
+                                    "...........######",
+                                    "..........#######",
+                                    ".........########"};
+
+            var game = new GalaxySweeperGame
+            {
+                field = data.ToList()
+            };
+
+            var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
+
+            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
+            stats.Log(logger);
+
+            var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
+
+            LogTopBombs(flattened, logger);
+            GalaxyVisualizator.RenderToConsole(deVakjesArray, logger);
+
+            Assert.Equal(8, flattened.Count(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom));
+        }
+
+        [Fact]
+        public void FindsTheseThroughSetsRecursively()
+        {
+            var logger = DefaultLoggerFactory.CreateLoggerForTests();
+
+            string[] data = new[] { "########.........",
+                                    "#######..........",
+                                    "######...........",
+                                    "#####............",
+                                    "####........00...",
+                                    "###........010...",
+                                    "##...............",
+                                    "#..........3.0...",
+                                    ".........1..10...",
+                                    ".......4...00...#",
+                                    "...............##",
+                                    "..............###",
+                                    ".............####",
+                                    "............#####",
+                                    "...........######",
+                                    "..........#######",
+                                    ".........########"};
+
+            var game = new GalaxySweeperGame
+            {
+                field = data.ToList()
+            };
+
+            var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
+
+            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
+            stats.Log(logger);
+
+            var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
+
+            LogTopBombs(flattened, logger);
+            GalaxyVisualizator.RenderToConsole(deVakjesArray, logger);
+
+            Assert.Equal(4, flattened.Count(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom));
         }
     }
 }
