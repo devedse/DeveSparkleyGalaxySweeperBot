@@ -370,5 +370,49 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             Assert.Equal(0, flattened.Count(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom));
         }
+
+        [Fact]
+        public void DoesntFindAllTheseFalsePositives2()
+        {
+            var logger = DefaultLoggerFactory.CreateLoggerForTests();
+
+
+
+            string[] data = new[] { "########.........",
+                                    "#######..........",
+                                    "######...........",
+                                    "#####............",
+                                    "####.............",
+                                    "###..............",
+                                    "##...............",
+                                    "#................",
+                                    ".........23......",
+                                    ".......R........#",
+                                    ".......1.......##",
+                                    "..............###",
+                                    ".............####",
+                                    "............#####",
+                                    "...........######",
+                                    "..........#######",
+                                    ".........########"};
+
+
+            var game = new GalaxySweeperGame
+            {
+                field = data.ToList()
+            };
+
+            var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
+
+            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
+            stats.Log(logger);
+
+            var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
+
+            LogTopBombs(flattened, logger);
+            GalaxyVisualizator.RenderToConsole(deVakjesArray, logger);
+
+            Assert.Equal(0, flattened.Count(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom));
+        }
     }
 }
