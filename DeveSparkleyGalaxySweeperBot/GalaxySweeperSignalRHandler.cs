@@ -3,7 +3,6 @@ using DeveSparkleyGalaxySweeperBot.Logging;
 using DeveSparkleyGalaxySweeperBot.Models;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,7 +11,7 @@ namespace DeveSparkleyGalaxySweeperBot
     public class GalaxySweeperSignalRHandler
     {
         private HubConnection connection;
-        private Random random = new Random();
+        private readonly Random random = new Random();
         private readonly GalaxySweeperApiHelper apiHelper;
         private readonly ILogger logger;
 
@@ -37,54 +36,66 @@ namespace DeveSparkleyGalaxySweeperBot
             var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
             stats.Log(logger);
 
-            var alleVakjes = TwoDimensionalArrayHelper.Flatten(deVakjesArray);
 
-            List<Vakje> bommenDieIkMoetKlikken = alleVakjes.Where(t => t != null && t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom).ToList();
+            var potentialBombs = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).Where(t => !t.Revealed).Where(t => t.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedNoBom).OrderByDescending(t => t.VakjeBerekeningen.BerekendeVakjeKans).ToList();
+            var guaranteedBombs = potentialBombs.Where(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom).ToList();
+            var vakjesMetBomErnaast = potentialBombs.Where(t => t.SurroundingVakjes.Any(z => z != null && z.IsBomb)).ToList();
 
-            var deBom = bommenDieIkMoetKlikken.FirstOrDefault();
             GalaxyVisualizator.RenderToConsole(deVakjesArray, logger);
 
-            logger.WriteLine("");
-            logger.WriteLine("Best bombs to click right now:");
-            var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
-            var ordered = flattened.OrderByDescending(t => t.VakjeBerekeningen.BerekendeVakjeKans).Take(5);
-            foreach (var maybeBom in ordered)
+            logger.WriteLine(string.Empty);
+
+            logger.WriteLine("Best chance bombs (top 5):");
+            foreach (var maybeBom in potentialBombs.Take(5))
+            {
+                logger.WriteLine($"\t{maybeBom.ToString()}");
+            }
+            logger.WriteLine(string.Empty);
+
+            logger.WriteLine("Vakjes die op z'n minst een bom er naast hebben (dus sowieso geen 0 zijn):");
+            foreach (var maybeBom in vakjesMetBomErnaast.Take(5))
             {
                 logger.WriteLine($"\t{maybeBom.ToString()}");
             }
 
-            if (game.myTurn == true && deBom != null)
+
+            logger.WriteLine(string.Empty);
+
+
+            var deBom = guaranteedBombs.FirstOrDefault();
+            if (deBom != null)
             {
-                apiHelper.Sweep(game.id, deBom.X, deBom.Y);
+                logger.WriteLine($"Beste keuze (Guaranteed bom): {deBom}", ConsoleColor.DarkGreen);
+                if (game.myTurn)
+                {
+                    apiHelper.Sweep(game.id, deBom.X, deBom.Y);
+                }
             }
             else
             {
-                var vakjesIenumerable = TwoDimensionalArrayHelper.Flatten(deVakjesArray);
-                var vakjeBepaling = vakjesIenumerable.Where(t => t != null && t.Revealed == false).OrderByDescending(t => t.VakjeBerekeningen.BerekendeVakjeKans).ToList();
-
-                var vakjesMetBomErnaast = vakjeBepaling.Where(t => t.SurroundingVakjes.Any(z => z != null && z.IsBomb)).ToList();
                 if (vakjesMetBomErnaast.Any())
                 {
-                    var hetVakjeWatWeGaanKlikken = vakjesMetBomErnaast[random.Next(0, vakjesMetBomErnaast.Count)];
-                    apiHelper.Sweep(game.id, hetVakjeWatWeGaanKlikken.X, hetVakjeWatWeGaanKlikken.Y);
+                    var hetVakjeWatWeGaanKlikken = vakjesMetBomErnaast.First();
+                    logger.WriteLine($"Beste keuze (Vakje met bom ernaast): {hetVakjeWatWeGaanKlikken}", ConsoleColor.DarkCyan);
+                    if (game.myTurn)
+                    {
+                        apiHelper.Sweep(game.id, hetVakjeWatWeGaanKlikken.X, hetVakjeWatWeGaanKlikken.Y);
+                    }
                 }
                 else
                 {
-                    var hetVakjeWatWeGaanKlikken = vakjeBepaling[random.Next(0, vakjeBepaling.Count)];
-                    apiHelper.Sweep(game.id, hetVakjeWatWeGaanKlikken.X, hetVakjeWatWeGaanKlikken.Y);
+                    var hetVakjeWatWeGaanKlikken = potentialBombs.First();
+                    logger.WriteLine($"Beste keuze (Hoogste kans): {hetVakjeWatWeGaanKlikken}", ConsoleColor.DarkBlue);
+                    if (game.myTurn)
+                    {
+                        apiHelper.Sweep(game.id, hetVakjeWatWeGaanKlikken.X, hetVakjeWatWeGaanKlikken.Y);
+                    }
                 }
             }
 
+            logger.WriteLine(string.Empty);
+            logger.WriteLine(string.Empty);
         }
-
-
-
-
-
-
-
-
-
 
         public void StartConnection()
         {
