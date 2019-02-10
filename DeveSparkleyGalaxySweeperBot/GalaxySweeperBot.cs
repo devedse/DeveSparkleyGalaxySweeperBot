@@ -1,4 +1,5 @@
-﻿using DeveSparkleyGalaxySweeperBot.Helpers;
+﻿using DeveSparkleyGalaxySweeperBot.Config;
+using DeveSparkleyGalaxySweeperBot.Helpers;
 using DeveSparkleyGalaxySweeperBot.Logging;
 using DeveSparkleyGalaxySweeperBot.Models;
 using DeveSparkleyGalaxySweeperBot.Stats;
@@ -11,11 +12,13 @@ namespace DeveSparkleyGalaxySweeperBot
     public class GalaxySweeperBot
     {
         private readonly GalaxySweeperApiHelper _galaxySweeperApiHelper;
+        private readonly BotConfig _botconfig;
         private readonly ILogger _logger;
 
-        public GalaxySweeperBot(GalaxySweeperApiHelper galaxySweeperApiHelper, ILogger logger)
+        public GalaxySweeperBot(GalaxySweeperApiHelper galaxySweeperApiHelper, BotConfig botconfig, ILogger logger)
         {
             _galaxySweeperApiHelper = galaxySweeperApiHelper;
+            _botconfig = botconfig;
             _logger = logger;
         }
 
@@ -53,13 +56,22 @@ namespace DeveSparkleyGalaxySweeperBot
 
 
             //Nu is alle data goed
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
+            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, _botconfig);
             stats.Log(_logger);
 
-
-            var potentialBombs = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).Where(t => !t.Revealed).Where(t => t.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedNoBom).OrderByDescending(t => t.VakjeBerekeningen.BerekendeVakjeKans).ToList();
+            var unrevealedVakjes = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).Where(t => !t.Revealed).OrderByDescending(t => t.VakjeBerekeningen.BerekendeVakjeKans).ToList();
+            var potentialBombs = unrevealedVakjes.Where(t => t.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedNoBom).ToList();
             var guaranteedBombs = potentialBombs.Where(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom).ToList();
-            var vakjesMetBomErnaast = potentialBombs.Where(t => t.SurroundingVakjes.Any(z => z != null && z.IsBomb)).ToList();
+
+            List<Vakje> vakjesMetBomErnaast;
+            if (_botconfig.AlwaysAvoidClickingOpenFields)
+            {
+                vakjesMetBomErnaast = unrevealedVakjes.Where(t => t.SurroundingVakjes.Any(z => z != null && z.IsBomb)).ToList();
+            }
+            else
+            {
+                vakjesMetBomErnaast = potentialBombs.Where(t => t.SurroundingVakjes.Any(z => z != null && z.IsBomb)).ToList();
+            }
 
             GalaxyVisualizator.RenderToConsole(deVakjesArray, _logger);
 

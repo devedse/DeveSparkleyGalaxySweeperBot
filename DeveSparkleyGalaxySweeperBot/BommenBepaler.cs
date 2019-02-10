@@ -1,4 +1,5 @@
-﻿using DeveSparkleyGalaxySweeperBot.Helpers;
+﻿using DeveSparkleyGalaxySweeperBot.Config;
+using DeveSparkleyGalaxySweeperBot.Helpers;
 using DeveSparkleyGalaxySweeperBot.Models;
 using DeveSparkleyGalaxySweeperBot.Stats;
 using System.Collections.Generic;
@@ -125,7 +126,7 @@ namespace DeveSparkleyGalaxySweeperBot
 
 
 
-        public static BommenBepalerStats BepaalBommenMulti(Vakje[,] deVakjesArray)
+        public static BommenBepalerStats BepaalBommenMulti(Vakje[,] deVakjesArray, BotConfig botConfig)
         {
             var stats = new BommenBepalerStats();
 
@@ -136,7 +137,7 @@ namespace DeveSparkleyGalaxySweeperBot
             int iteraties = 0;
             while (doorGaan)
             {
-                var iteratie = BepaalBommen(deVakjesArray, width, height);
+                var iteratie = BepaalBommen(deVakjesArray, width, height, botConfig);
                 iteratie.IteratieNummer = iteraties;
                 stats.Iteraties.Add(iteratie);
                 doorGaan = iteratie.Vondsten.Any();
@@ -146,7 +147,7 @@ namespace DeveSparkleyGalaxySweeperBot
             return stats;
         }
 
-        public static BommenBepalerStatsIteratie BepaalBommen(Vakje[,] deVakjesArray, int width, int height)
+        public static BommenBepalerStatsIteratie BepaalBommen(Vakje[,] deVakjesArray, int width, int height, BotConfig botConfig)
         {
             var iteratie = new BommenBepalerStatsIteratie();
 

@@ -26,10 +26,15 @@ namespace DeveSparkleyGalaxySweeperBot.Runner
             return DefaultLoggerFactory.CreateLoggerForConsoleAppFast();
         }
 
+        private static BotConfig CreateBotConfig()
+        {
+            return BotConfig.Level9;
+        }
+
         public static void StartBot()
         {
             var logger = CreateLogger();
-            var a = new GalaxySweeperBotFlow(GalaxySweeperConfig.AccessToken, logger);
+            var a = new GalaxySweeperBotFlow(GalaxySweeperConfig.AccessToken, CreateBotConfig(), logger);
             a.StartBot();
         }
 
@@ -38,7 +43,7 @@ namespace DeveSparkleyGalaxySweeperBot.Runner
             var logger = CreateLogger();
 
             var galaxySweeperApiHelper = new GalaxySweeperApiHelper(GalaxySweeperConfig.AccessToken, logger);
-            var galaxySweeperBot = new GalaxySweeperBot(galaxySweeperApiHelper, logger);
+            var galaxySweeperBot = new GalaxySweeperBot(galaxySweeperApiHelper, CreateBotConfig(), logger);
 
             var fakeGame = JsonConvert.DeserializeObject<GalaxySweeperGame>(File.ReadAllText("SampleGameData.txt"));
 

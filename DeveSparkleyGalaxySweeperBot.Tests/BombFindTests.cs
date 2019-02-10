@@ -1,3 +1,4 @@
+using DeveSparkleyGalaxySweeperBot.Config;
 using DeveSparkleyGalaxySweeperBot.Helpers;
 using DeveSparkleyGalaxySweeperBot.Logging;
 using DeveSparkleyGalaxySweeperBot.Models;
@@ -15,6 +16,11 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
             {
                 logger.WriteLine($"Bom: ({maybeBom.VakjeBerekeningen.BerekendeVakjeKans}) ({maybeBom.X},{maybeBom.Y})");
             }
+        }
+
+        public BotConfig TestBotConfig()
+        {
+            return BotConfig.Level9;
         }
 
         [Fact]
@@ -48,7 +54,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
+            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, TestBotConfig());
             stats.Log(logger);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
@@ -90,7 +96,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
+            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, TestBotConfig());
             stats.Log(logger);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
@@ -133,7 +139,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
+            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, TestBotConfig());
             stats.Log(logger);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
@@ -176,7 +182,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
+            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, TestBotConfig());
             stats.Log(logger);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
@@ -218,7 +224,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
+            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, TestBotConfig());
             stats.Log(logger);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
@@ -261,7 +267,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
+            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, TestBotConfig());
             stats.Log(logger);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
@@ -303,7 +309,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
+            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, TestBotConfig());
             stats.Log(logger);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
@@ -346,7 +352,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
+            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, TestBotConfig());
             stats.Log(logger);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
@@ -388,7 +394,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
+            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, TestBotConfig());
             stats.Log(logger);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
@@ -430,7 +436,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
+            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, TestBotConfig());
             stats.Log(logger);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
@@ -472,7 +478,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
+            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, TestBotConfig());
             stats.Log(logger);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
@@ -513,7 +519,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
+            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, TestBotConfig());
             stats.Log(logger);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
@@ -554,7 +560,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
+            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, TestBotConfig());
             stats.Log(logger);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
