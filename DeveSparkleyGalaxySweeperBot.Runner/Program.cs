@@ -47,8 +47,6 @@ namespace DeveSparkleyGalaxySweeperBot.Runner
                 var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
                 logger.WriteLine($"{game.id}:");
 
-                BommenBepaler.BepaalBommenMulti(deVakjesArray);
-
                 var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
                 var ordered = flattened.OrderByDescending(t => t.VakjeBerekeningen.BerekendeVakjeKans);
                 foreach (var maybeBom in ordered)
@@ -56,10 +54,11 @@ namespace DeveSparkleyGalaxySweeperBot.Runner
                     logger.WriteLine(maybeBom.ToString());
                 }
 
+                var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
+                stats.Log(logger);
+
                 GalaxyVisualizator.RenderToConsole(deVakjesArray, logger);
             }
         }
-
-
     }
 }
