@@ -5,14 +5,16 @@ namespace DeveSparkleyGalaxySweeperBot
 {
     public class GalaxySweeperBotFlow
     {
-        private readonly GalaxySweeperApiHelper apiHandler;
+        private readonly GalaxySweeperApiHelper galaxySweeperApiHelper;
+        private readonly GalaxySweeperBot galaxySweeperBot;
         private readonly GalaxySweeperSignalRHandler signalHandler;
         private readonly ILogger logger;
 
         public GalaxySweeperBotFlow(string bearerToken, ILogger logger)
         {
-            apiHandler = new GalaxySweeperApiHelper(bearerToken, logger);
-            signalHandler = new GalaxySweeperSignalRHandler(bearerToken, apiHandler, logger);
+            galaxySweeperApiHelper = new GalaxySweeperApiHelper(bearerToken, logger);
+            galaxySweeperBot = new GalaxySweeperBot(galaxySweeperApiHelper, logger);
+            signalHandler = new GalaxySweeperSignalRHandler(bearerToken, galaxySweeperBot, galaxySweeperApiHelper, logger);
             this.logger = logger;
         }
 

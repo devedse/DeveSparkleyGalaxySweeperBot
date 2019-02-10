@@ -21,7 +21,7 @@ namespace DeveSparkleyGalaxySweeperBot.Models
                         return 1;
                     case BerekendVakjeType.GuaranteedNoBom:
                         return 0;
-                    case BerekendVakjeType.Unknwon:
+                    case BerekendVakjeType.Unknown:
                     default:
                         if (Sets.Count == 0)
                         {

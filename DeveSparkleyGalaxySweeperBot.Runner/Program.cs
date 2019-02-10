@@ -17,8 +17,8 @@ namespace DeveSparkleyGalaxySweeperBot.Runner
         {
             Console.WriteLine("Hello World!");
 
-            DoeIetsAnders();
             StartBot();
+            DoeIetsAnders();
 
             Console.WriteLine("Press any key to exit the application");
             Console.ReadLine();
@@ -34,31 +34,36 @@ namespace DeveSparkleyGalaxySweeperBot.Runner
         public static void DoeIetsAnders()
         {
             var logger = DefaultLoggerFactory.CreateLoggerForConsoleApp();
-            //var a = new GalaxySweeperBotFlow(GalaxySweeperConfig.AccessToken);
-            var ccc = new GalaxySweeperApiHelper(GalaxySweeperConfig.AccessToken, logger);
-            //var b = new GalaxySweeperSignalRHandler(GalaxySweeperConfig.AccessToken, ccc);
+
+            var galaxySweeperApiHelper = new GalaxySweeperApiHelper(GalaxySweeperConfig.AccessToken, logger);
+            var galaxySweeperBot = new GalaxySweeperBot(galaxySweeperApiHelper, logger);
+
             var fakeGame = JsonConvert.DeserializeObject<GalaxySweeperGame>(File.ReadAllText("SampleGameData.txt"));
 
-            var allGames = ccc.GetGames().Result;
+            var allGames = galaxySweeperApiHelper.GetGames().Result;
 
 
             foreach (var game in allGames.Where(t => !t.isFinished))
             {
-                var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
-                logger.WriteLine($"{game.id}:");
+                galaxySweeperBot.DetermineBestMove(game, true);
 
-                var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
-                var ordered = flattened.OrderByDescending(t => t.VakjeBerekeningen.BerekendeVakjeKans);
-                foreach (var maybeBom in ordered)
-                {
-                    logger.WriteLine(maybeBom.ToString());
-                }
+                //var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
+                //logger.WriteLine($"{game.id}:");
 
-                var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
-                stats.Log(logger);
+                //var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
+                //var ordered = flattened.OrderByDescending(t => t.VakjeBerekeningen.BerekendeVakjeKans);
+                //foreach (var maybeBom in ordered)
+                //{
+                //    logger.WriteLine(maybeBom.ToString());
+                //}
 
-                GalaxyVisualizator.RenderToConsole(deVakjesArray, logger);
+                //var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
+                //stats.Log(logger);
+
+                //GalaxyVisualizator.RenderToConsole(deVakjesArray, logger);
             }
+
+            galaxySweeperBot.AcceptInvitesForAllGames(allGames);
         }
     }
 }
