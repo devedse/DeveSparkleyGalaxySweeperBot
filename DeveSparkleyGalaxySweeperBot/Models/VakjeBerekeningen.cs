@@ -6,6 +6,7 @@ namespace DeveSparkleyGalaxySweeperBot.Models
     public class VakjeBerekeningen
     {
         public List<VakjeSet> Sets { get; set; } = new List<VakjeSet>();
+        public List<VakjeSetDeluxe> SetsDeluxe { get; set; } = new List<VakjeSetDeluxe>();
         public VakjeSet TheBigUnrevealedSet { get; set; }
 
         public BerekendVakjeType BerekendVakjeType { get; set; }
