@@ -49,25 +49,9 @@ namespace DeveSparkleyGalaxySweeperBot.Runner
 
             var allGames = galaxySweeperApiHelper.GetGames().Result;
 
-
             foreach (var game in allGames.Where(t => !t.isFinished))
             {
                 galaxySweeperBot.DetermineBestMove(game, true);
-
-                //var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
-                //logger.WriteLine($"{game.id}:");
-
-                //var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
-                //var ordered = flattened.OrderByDescending(t => t.VakjeBerekeningen.BerekendeVakjeKans);
-                //foreach (var maybeBom in ordered)
-                //{
-                //    logger.WriteLine(maybeBom.ToString());
-                //}
-
-                //var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
-                //stats.Log(logger);
-
-                //GalaxyVisualizator.RenderToConsole(deVakjesArray, logger);
             }
 
             galaxySweeperBot.AcceptInvitesForAllGames(allGames);
