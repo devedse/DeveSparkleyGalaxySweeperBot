@@ -26,7 +26,7 @@ namespace DeveSparkleyGalaxySweeperBot.Models
 
         public override string ToString()
         {
-            return $"{Value} -> {VakjeBerekeningen.BerekendVakjeType} ({X},{Y})   [{string.Join(" ", SurroundingVakjes.Select(t => t.Value))}]";
+            return $"{Value} -> ({VakjeBerekeningen.BerekendeVakjeKans}%) {VakjeBerekeningen.BerekendVakjeType} ({X},{Y})  Surrounding: [{string.Join(" ", SurroundingVakjes.Select(t => t.Value))}]";
         }
     }
 }

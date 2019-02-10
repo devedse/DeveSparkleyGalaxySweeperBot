@@ -53,7 +53,7 @@ namespace DeveSparkleyGalaxySweeperBot.Runner
                 var ordered = flattened.OrderByDescending(t => t.VakjeBerekeningen.BerekendeVakjeKans);
                 foreach (var maybeBom in ordered)
                 {
-                    logger.WriteLine($"Bom: ({maybeBom.VakjeBerekeningen.BerekendeVakjeKans}) ({maybeBom.X},{maybeBom.Y})");
+                    logger.WriteLine(maybeBom.ToString());
                 }
 
                 GalaxyVisualizator.RenderToConsole(deVakjesArray, logger);

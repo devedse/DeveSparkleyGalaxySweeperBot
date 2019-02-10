@@ -41,13 +41,17 @@ namespace DeveSparkleyGalaxySweeperBot
 
             List<Vakje> bommenDieIkMoetKlikken = alleVakjes.Where(t => t != null && t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom).ToList();
 
-            foreach (var bomGevonden in bommenDieIkMoetKlikken)
-            {
-                Console.WriteLine($"Bom: ({bomGevonden.X},{bomGevonden.Y})");
-            }
-
             var deBom = bommenDieIkMoetKlikken.FirstOrDefault();
             GalaxyVisualizator.RenderToConsole(deVakjesArray, logger);
+
+            logger.WriteLine("");
+            logger.WriteLine("Best bombs to click right now:");
+            var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
+            var ordered = flattened.OrderByDescending(t => t.VakjeBerekeningen.BerekendeVakjeKans).Take(5);
+            foreach (var maybeBom in ordered)
+            {
+                logger.WriteLine($"\t{maybeBom.ToString()}");
+            }
 
             if (game.myTurn == true && deBom != null)
             {
