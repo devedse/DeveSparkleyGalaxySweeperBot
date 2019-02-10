@@ -1,4 +1,6 @@
-﻿using DeveSparkleyGalaxySweeperBot.Models;
+﻿using DeveSparkleyGalaxySweeperBot.Logging;
+using DeveSparkleyGalaxySweeperBot.Models;
+using System;
 
 namespace DeveSparkleyGalaxySweeperBot.Stats
 {
@@ -11,6 +13,11 @@ namespace DeveSparkleyGalaxySweeperBot.Stats
         {
             Vakje = vakje;
             VondstType = vondstType;
+        }
+
+        public void Log(ILogger logger)
+        {
+            logger.WriteLine($"\t\t{VondstType} -> {Vakje}");
         }
     }
 }

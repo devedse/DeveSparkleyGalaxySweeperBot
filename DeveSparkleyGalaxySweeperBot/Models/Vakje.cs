@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace DeveSparkleyGalaxySweeperBot.Models
 {
@@ -25,7 +26,7 @@ namespace DeveSparkleyGalaxySweeperBot.Models
 
         public override string ToString()
         {
-            return $"{Value} -> {VakjeBerekeningen.BerekendVakjeType}";
+            return $"{Value} -> {VakjeBerekeningen.BerekendVakjeType} ({X},{Y})   [{string.Join(" ", SurroundingVakjes.Select(t => t.Value))}]";
         }
     }
 }

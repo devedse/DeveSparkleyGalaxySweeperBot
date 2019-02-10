@@ -43,7 +43,7 @@ namespace DeveSparkleyGalaxySweeperBot.Helpers
             return fackString;
         }
 
-        public static void RenderToConsoleOud(Vakje[,] deVakjesArray)
+        public static void RenderToConsoleOud(Vakje[,] deVakjesArray, ILogger logger)
         {
             int width = deVakjesArray.GetLength(0);
             int height = deVakjesArray.GetLength(1);
@@ -56,15 +56,15 @@ namespace DeveSparkleyGalaxySweeperBot.Helpers
 
                     if (vakje != null)
                     {
-                        Console.Write(vakje.Value + " ");
+                        logger.Write(vakje.Value + " ");
                     }
                     else
                     {
-                        Console.Write("# ");
+                        logger.Write("# ");
                     }
                 }
 
-                Console.WriteLine();
+                logger.WriteLine(string.Empty);
             }
         }
 

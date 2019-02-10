@@ -34,7 +34,8 @@ namespace DeveSparkleyGalaxySweeperBot
 
 
             //Nu is alle data goed
-            BommenBepaler.BepaalBommenMulti(deVakjesArray);
+            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray);
+            stats.Log(logger);
 
             var alleVakjes = TwoDimensionalArrayHelper.Flatten(deVakjesArray);
 
@@ -55,7 +56,7 @@ namespace DeveSparkleyGalaxySweeperBot
             else
             {
                 var vakjesIenumerable = TwoDimensionalArrayHelper.Flatten(deVakjesArray);
-                var vakjeBepaling = vakjesIenumerable.Where(t => t != null && t.Revealed == false).ToList();
+                var vakjeBepaling = vakjesIenumerable.Where(t => t != null && t.Revealed == false).OrderByDescending(t => t.VakjeBerekeningen.BerekendeVakjeKans).ToList();
 
                 var vakjesMetBomErnaast = vakjeBepaling.Where(t => t.SurroundingVakjes.Any(z => z != null && z.IsBomb)).ToList();
                 if (vakjesMetBomErnaast.Any())
@@ -72,7 +73,7 @@ namespace DeveSparkleyGalaxySweeperBot
 
         }
 
-      
+
 
 
 

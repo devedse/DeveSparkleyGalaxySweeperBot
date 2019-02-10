@@ -21,9 +21,9 @@ namespace DeveSparkleyGalaxySweeperBot
             while (doorGaan)
             {
                 var iteratie = BepaalBommen(deVakjesArray, width, height);
+                iteratie.IteratieNummer = iteraties;
                 stats.Iteraties.Add(iteratie);
                 doorGaan = iteratie.Vondsten.Any();
-                Console.WriteLine($"{iteraties}: Bommen gevonden: {TwoDimensionalArrayHelper.Flatten(deVakjesArray).Count(t => t != null && t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom)}");
                 iteraties++;
             }
             Debug.WriteLine($"Totaal iteraties: {iteraties}");
