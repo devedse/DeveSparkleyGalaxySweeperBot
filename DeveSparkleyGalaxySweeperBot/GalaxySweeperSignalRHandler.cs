@@ -11,7 +11,6 @@ namespace DeveSparkleyGalaxySweeperBot
     public class GalaxySweeperSignalRHandler
     {
         private HubConnection connection;
-        private readonly Random random = new Random();
         private readonly GalaxySweeperApiHelper apiHelper;
         private readonly ILogger logger;
 
