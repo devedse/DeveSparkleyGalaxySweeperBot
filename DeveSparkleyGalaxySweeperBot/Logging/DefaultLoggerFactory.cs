@@ -20,5 +20,12 @@
 
             return consoleLogger;
         }
+
+        public static ILogger CreateLoggerForConsoleAppFast()
+        {
+            var consoleLogger = new ConsoleLoggerFastNoColor();
+            var cacheAsLinesLogger = new CacheAsLinesLogger(consoleLogger);
+            return cacheAsLinesLogger;
+        }
     }
 }

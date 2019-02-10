@@ -1,5 +1,4 @@
 ﻿using DeveSparkleyGalaxySweeperBot.Config;
-using DeveSparkleyGalaxySweeperBot.Helpers;
 using DeveSparkleyGalaxySweeperBot.Logging;
 using DeveSparkleyGalaxySweeperBot.Models;
 using Newtonsoft.Json;
@@ -11,8 +10,6 @@ namespace DeveSparkleyGalaxySweeperBot.Runner
 {
     public class Program
     {
-
-
         public static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
@@ -24,16 +21,21 @@ namespace DeveSparkleyGalaxySweeperBot.Runner
             Console.ReadLine();
         }
 
+        private static ILogger CreateLogger()
+        {
+            return DefaultLoggerFactory.CreateLoggerForConsoleAppFast();
+        }
+
         public static void StartBot()
         {
-            var logger = DefaultLoggerFactory.CreateLoggerForConsoleApp();
+            var logger = CreateLogger();
             var a = new GalaxySweeperBotFlow(GalaxySweeperConfig.AccessToken, logger);
             a.StartBot();
         }
 
         public static void DoeIetsAnders()
         {
-            var logger = DefaultLoggerFactory.CreateLoggerForConsoleApp();
+            var logger = CreateLogger();
 
             var galaxySweeperApiHelper = new GalaxySweeperApiHelper(GalaxySweeperConfig.AccessToken, logger);
             var galaxySweeperBot = new GalaxySweeperBot(galaxySweeperApiHelper, logger);
