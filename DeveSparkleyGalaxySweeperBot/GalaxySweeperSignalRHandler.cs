@@ -1,4 +1,5 @@
 ﻿using DeveSparkleyGalaxySweeperBot.Helpers;
+using DeveSparkleyGalaxySweeperBot.Logging;
 using DeveSparkleyGalaxySweeperBot.Models;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
@@ -13,13 +14,15 @@ namespace DeveSparkleyGalaxySweeperBot
         private HubConnection connection;
         private Random random = new Random();
         private readonly GalaxySweeperApiHelper apiHelper;
+        private readonly ILogger logger;
 
-        public GalaxySweeperSignalRHandler(string bearerToken, GalaxySweeperApiHelper apiHelper)
+        public GalaxySweeperSignalRHandler(string bearerToken, GalaxySweeperApiHelper apiHelper, ILogger logger)
         {
             connection = new HubConnectionBuilder()
                 .WithUrl("https://galaxysweeper.com/hubs/minesweeper", t => t.AccessTokenProvider = () => Task.FromResult(bearerToken))
                 .Build();
             this.apiHelper = apiHelper;
+            this.logger = logger;
         }
 
         public void HandleGameSweeperGameMessage(GalaxySweeperGame game)
@@ -43,7 +46,7 @@ namespace DeveSparkleyGalaxySweeperBot
             }
 
             var deBom = bommenDieIkMoetKlikken.FirstOrDefault();
-            GalaxyVisualizator.RenderToConsole(deVakjesArray);
+            GalaxyVisualizator.RenderToConsole(deVakjesArray, logger);
 
             if (game.myTurn == true && deBom != null)
             {

@@ -1,6 +1,6 @@
 using DeveSparkleyGalaxySweeperBot.Helpers;
+using DeveSparkleyGalaxySweeperBot.Logging;
 using DeveSparkleyGalaxySweeperBot.Models;
-using System.Diagnostics;
 using System.Linq;
 using Xunit;
 
@@ -11,6 +11,8 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
         [Fact]
         public void FindsSetsWithGuaranteedBombs()
         {
+            var logger = DefaultLoggerFactory.CreateLoggerForTests();
+
             string[] data = new[] { "########.........",
                                     "#######..........",
                                     "######...........",
@@ -40,20 +42,18 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
             BommenBepaler.BepaalBommenMulti(deVakjesArray);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
-            var ordered = flattened.OrderBy(t => t.VakjeBerekeningen.BerekendeVakjeKans);
-            foreach (var maybeBom in ordered)
-            {
-                Debug.WriteLine($"Bom: ({maybeBom.VakjeBerekeningen.BerekendeVakjeKans}) ({maybeBom.X},{maybeBom.Y})");
-            }
+
+            LogTopBombs(flattened, logger);
+            GalaxyVisualizator.RenderToConsole(deVakjesArray, logger);
 
             Assert.Equal(2, flattened.Count(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom));
-
-            GalaxyVisualizator.RenderToConsole(deVakjesArray, true);
         }
 
         [Fact]
         public void FindsSetsWithGuaranteedBombs2()
         {
+            var logger = DefaultLoggerFactory.CreateLoggerForTests();
+
             string[] data = new[] { "########.........",
                                     "#######..........",
                                     "######...........",
@@ -83,21 +83,19 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
             BommenBepaler.BepaalBommenMulti(deVakjesArray);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
-            var ordered = flattened.OrderBy(t => t.VakjeBerekeningen.BerekendeVakjeKans);
-            foreach (var maybeBom in ordered)
-            {
-                Debug.WriteLine($"Bom: ({maybeBom.VakjeBerekeningen.BerekendeVakjeKans}) ({maybeBom.X},{maybeBom.Y})");
-            }
+
+            LogTopBombs(flattened, logger);
+            GalaxyVisualizator.RenderToConsole(deVakjesArray, logger);
 
             Assert.Equal(1, flattened.Count(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom));
-
-            GalaxyVisualizator.RenderToConsole(deVakjesArray, true);
         }
 
 
         [Fact]
         public void EnsureDoesntFindFalsePositives()
         {
+            var logger = DefaultLoggerFactory.CreateLoggerForTests();
+
             string[] data = new[] { "########.........",
                                     "#######..........",
                                     "######...........",
@@ -127,21 +125,19 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
             BommenBepaler.BepaalBommenMulti(deVakjesArray);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
-            var ordered = flattened.OrderBy(t => t.VakjeBerekeningen.BerekendeVakjeKans);
-            foreach (var maybeBom in ordered)
-            {
-                Debug.WriteLine($"Bom: ({maybeBom.VakjeBerekeningen.BerekendeVakjeKans}) ({maybeBom.X},{maybeBom.Y})");
-            }
+
+            LogTopBombs(flattened, logger);
+            GalaxyVisualizator.RenderToConsole(deVakjesArray, logger);
 
             Assert.Equal(0, flattened.Count(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom));
-
-            GalaxyVisualizator.RenderToConsole(deVakjesArray, true);
         }
 
 
         [Fact]
         public void EnsureDoesntFindFalsePositives2()
         {
+            var logger = DefaultLoggerFactory.CreateLoggerForTests();
+
             string[] data = new[] { "########.........",
                                     "#######..........",
                                     "######...........",
@@ -171,22 +167,18 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
             BommenBepaler.BepaalBommenMulti(deVakjesArray);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
-            var ordered = flattened.OrderBy(t => t.VakjeBerekeningen.BerekendeVakjeKans);
-            foreach (var maybeBom in ordered)
-            {
-                Debug.WriteLine($"Bom: ({maybeBom.VakjeBerekeningen.BerekendeVakjeKans}) ({maybeBom.X},{maybeBom.Y})");
-            }
+
+            LogTopBombs(flattened, logger);
+            GalaxyVisualizator.RenderToConsole(deVakjesArray, logger);
 
             Assert.Equal(0, flattened.Count(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom));
-
-            GalaxyVisualizator.RenderToConsole(deVakjesArray, true);
         }
-
-
 
         [Fact]
         public void FindsNonGuaranteedBombsAndThenRecursivelyFindsGuaranteedBombs()
         {
+            var logger = DefaultLoggerFactory.CreateLoggerForTests();
+
             string[] data = new[] { "########.........",
                                     "#######..........",
                                     "######...........",
@@ -213,27 +205,22 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            GalaxyVisualizator.RenderToConsole(deVakjesArray, true);
-
-
             BommenBepaler.BepaalBommenMulti(deVakjesArray);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
-            //var ordered = flattened.OrderBy(t => t.VakjeBerekeningen.BerekendeVakjeKans);
-            //foreach (var maybeBom in ordered)
-            //{
-            //    Debug.WriteLine($"Bom: ({maybeBom.VakjeBerekeningen.BerekendeVakjeKans}) ({maybeBom.X},{maybeBom.Y})");
-            //}
+
+            LogTopBombs(flattened, logger);
+            GalaxyVisualizator.RenderToConsole(deVakjesArray, logger);
 
             Assert.Equal(5, flattened.Count(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom));
             Assert.Equal(4, flattened.Count(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedNoBom));
-
-            GalaxyVisualizator.RenderToConsole(deVakjesArray, true);
         }
 
         [Fact]
         public void FindsSetsWithGuaranteedBombs3()
         {
+            var logger = DefaultLoggerFactory.CreateLoggerForTests();
+
             string[] data = new[] { "########.........",
                                     "#######..........",
                                     "######...........",
@@ -260,21 +247,24 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            GalaxyVisualizator.RenderToConsole(deVakjesArray, true);
-
 
             BommenBepaler.BepaalBommenMulti(deVakjesArray);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
-            //var ordered = flattened.OrderBy(t => t.VakjeBerekeningen.BerekendeVakjeKans);
-            //foreach (var maybeBom in ordered)
-            //{
-            //    Debug.WriteLine($"Bom: ({maybeBom.VakjeBerekeningen.BerekendeVakjeKans}) ({maybeBom.X},{maybeBom.Y})");
-            //}
 
-            GalaxyVisualizator.RenderToConsole(deVakjesArray, true);
+            LogTopBombs(flattened, logger);
+            GalaxyVisualizator.RenderToConsole(deVakjesArray, logger);
 
             Assert.Equal(5, flattened.Count(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom));
+        }
+
+        private static void LogTopBombs(System.Collections.Generic.List<Vakje> flattened, ILogger logger)
+        {
+            var ordered = flattened.OrderBy(t => t.VakjeBerekeningen.BerekendeVakjeKans).Take(10);
+            foreach (var maybeBom in ordered)
+            {
+                logger.WriteLine($"Bom: ({maybeBom.VakjeBerekeningen.BerekendeVakjeKans}) ({maybeBom.X},{maybeBom.Y})");
+            }
         }
     }
 }

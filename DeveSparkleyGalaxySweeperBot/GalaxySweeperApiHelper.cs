@@ -1,4 +1,5 @@
-﻿using DeveSparkleyGalaxySweeperBot.Models;
+﻿using DeveSparkleyGalaxySweeperBot.Logging;
+using DeveSparkleyGalaxySweeperBot.Models;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -9,12 +10,14 @@ namespace DeveSparkleyGalaxySweeperBot
 {
     public class GalaxySweeperApiHelper
     {
+        private readonly ILogger logger;
         private HttpClient _httpClient;
 
-        public GalaxySweeperApiHelper(string bearerToken)
+        public GalaxySweeperApiHelper(string bearerToken, ILogger logger)
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
+            this.logger = logger;
         }
 
         public async Task<GalaxySweeperGame[]> GetGames()

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DeveSparkleyGalaxySweeperBot.Logging;
+using System;
 
 namespace DeveSparkleyGalaxySweeperBot
 {
@@ -6,10 +7,13 @@ namespace DeveSparkleyGalaxySweeperBot
     {
         private readonly GalaxySweeperApiHelper apiHandler;
         private readonly GalaxySweeperSignalRHandler signalHandler;
-        public GalaxySweeperBotFlow(string bearerToken)
+        private readonly ILogger logger;
+
+        public GalaxySweeperBotFlow(string bearerToken, ILogger logger)
         {
-            apiHandler = new GalaxySweeperApiHelper(bearerToken);
-            signalHandler = new GalaxySweeperSignalRHandler(bearerToken, apiHandler);
+            apiHandler = new GalaxySweeperApiHelper(bearerToken, logger);
+            signalHandler = new GalaxySweeperSignalRHandler(bearerToken, apiHandler, logger);
+            this.logger = logger;
         }
 
         public void StartBot()

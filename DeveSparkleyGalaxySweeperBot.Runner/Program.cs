@@ -1,5 +1,6 @@
 ﻿using DeveSparkleyGalaxySweeperBot.Config;
 using DeveSparkleyGalaxySweeperBot.Helpers;
+using DeveSparkleyGalaxySweeperBot.Logging;
 using DeveSparkleyGalaxySweeperBot.Models;
 using Newtonsoft.Json;
 using System;
@@ -25,15 +26,16 @@ namespace DeveSparkleyGalaxySweeperBot.Runner
 
         public static void StartBot()
         {
-
-            var a = new GalaxySweeperBotFlow(GalaxySweeperConfig.AccessToken);
+            var logger = DefaultLoggerFactory.CreateLoggerForConsoleApp();
+            var a = new GalaxySweeperBotFlow(GalaxySweeperConfig.AccessToken, logger);
             a.StartBot();
         }
 
         public static void DoeIetsAnders()
         {
+            var logger = DefaultLoggerFactory.CreateLoggerForConsoleApp();
             //var a = new GalaxySweeperBotFlow(GalaxySweeperConfig.AccessToken);
-            var ccc = new GalaxySweeperApiHelper(GalaxySweeperConfig.AccessToken);
+            var ccc = new GalaxySweeperApiHelper(GalaxySweeperConfig.AccessToken, logger);
             //var b = new GalaxySweeperSignalRHandler(GalaxySweeperConfig.AccessToken, ccc);
             var fakeGame = JsonConvert.DeserializeObject<GalaxySweeperGame>(File.ReadAllText("SampleGameData.txt"));
 
@@ -54,7 +56,7 @@ namespace DeveSparkleyGalaxySweeperBot.Runner
                     Console.WriteLine($"Bom: ({maybeBom.VakjeBerekeningen.BerekendeVakjeKans}) ({maybeBom.X},{maybeBom.Y})");
                 }
 
-                GalaxyVisualizator.RenderToConsole(deVakjesArray);
+                GalaxyVisualizator.RenderToConsole(deVakjesArray, logger);
             }
         }
 
