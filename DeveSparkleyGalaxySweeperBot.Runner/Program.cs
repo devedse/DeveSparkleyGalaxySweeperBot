@@ -21,7 +21,7 @@ namespace DeveSparkleyGalaxySweeperBot.Runner
             StartBot();
 
             Console.WriteLine("Press any key to exit the application");
-            Console.ReadKey();
+            Console.ReadLine();
         }
 
         public static void StartBot()
