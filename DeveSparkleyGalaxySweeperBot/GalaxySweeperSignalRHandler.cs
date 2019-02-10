@@ -47,7 +47,12 @@ namespace DeveSparkleyGalaxySweeperBot
             logger.WriteLine("Best chance bombs (top 5):");
             foreach (var maybeBom in potentialBombs.Take(5))
             {
-                logger.WriteLine($"\t{maybeBom.ToString()}");
+                var stringToLog = $"\t{maybeBom.ToString()}";
+                if (maybeBom.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom)
+                {
+                    stringToLog += stats.CreateLogStringVanWaarDezeGevondenIs(maybeBom);
+                }
+                logger.WriteLine(stringToLog);
             }
             logger.WriteLine(string.Empty);
 
@@ -56,7 +61,6 @@ namespace DeveSparkleyGalaxySweeperBot
             {
                 logger.WriteLine($"\t{maybeBom.ToString()}");
             }
-
 
             logger.WriteLine(string.Empty);
 
