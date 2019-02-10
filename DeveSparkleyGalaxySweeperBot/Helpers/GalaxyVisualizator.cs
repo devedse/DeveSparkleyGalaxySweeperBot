@@ -91,6 +91,10 @@ namespace DeveSparkleyGalaxySweeperBot.Helpers
                         {
                             fackString[yResult][xResult] = 'G';
                         }
+                        else if (vakje.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedNoBom)
+                        {
+                            fackString[yResult][xResult] = 'N';
+                        }
                         else
                         {
                             fackString[yResult][xResult] = vakje.Value;
@@ -128,6 +132,10 @@ namespace DeveSparkleyGalaxySweeperBot.Helpers
                     if (curChar == 'G')
                     {
                         logger.Write(curString[x], ConsoleColor.Cyan);
+                    }
+                    else if (curChar == 'N')
+                    {
+                        logger.Write(curString[x], ConsoleColor.Magenta);
                     }
                     else if (curChar == '.')
                     {

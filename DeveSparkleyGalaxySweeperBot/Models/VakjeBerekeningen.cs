@@ -17,7 +17,7 @@ namespace DeveSparkleyGalaxySweeperBot.Models
                 switch (BerekendVakjeType)
                 {
                     case BerekendVakjeType.GuaranteedBom:
-                        return 100;
+                        return 1;
                     case BerekendVakjeType.GuaranteedNoBom:
                         return 0;
                     case BerekendVakjeType.Unknwon:
