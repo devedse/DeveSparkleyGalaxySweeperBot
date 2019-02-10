@@ -23,7 +23,7 @@ namespace DeveSparkleyGalaxySweeperBot.Runner
 
         private static ILogger CreateLogger()
         {
-            return DefaultLoggerFactory.CreateLoggerForConsoleAppFast();
+            return DefaultLoggerFactory.CreateLoggerForConsoleApp();
         }
 
         private static BotConfig CreateBotConfig()

@@ -212,55 +212,57 @@ namespace DeveSparkleyGalaxySweeperBot
                 }
             }
 
-
-            var allSets = flatVakjes.SelectMany(t => t.VakjeBerekeningen.Sets).Distinct();
-
-            foreach (var set in allSets)
+            if (botConfig.UseSetDetection)
             {
-                //we kijken nu per set
-                foreach (var vakjeInSet in set.Vakjes)
-                {
+                var allSets = flatVakjes.SelectMany(t => t.VakjeBerekeningen.Sets).Distinct();
 
-                    foreach (var setVanDeze in vakjeInSet.VakjeBerekeningen.Sets)
+                foreach (var set in allSets)
+                {
+                    //we kijken nu per set
+                    foreach (var vakjeInSet in set.Vakjes)
                     {
 
-
-                        if (set != setVanDeze)
+                        foreach (var setVanDeze in vakjeInSet.VakjeBerekeningen.Sets)
                         {
-                            var vakjesInBeideSets = set.Vakjes.Intersect(setVanDeze.Vakjes).ToList();
-                            var bommenInVakjesInBeideNodigGezienVanuitSet = set.CountVanBommenDieErMoetenZijn - (set.Vakjes.Count - vakjesInBeideSets.Count);
-                            var countGuaranteedNotBombsInIntersection = vakjesInBeideSets.Count - set.CountVanBommenDieErMoetenZijn;
 
-                            if (bommenInVakjesInBeideNodigGezienVanuitSet == setVanDeze.CountVanBommenDieErMoetenZijn)
+
+                            if (set != setVanDeze)
                             {
-                                var vakjesNietGedeeld = setVanDeze.Vakjes.Except(vakjesInBeideSets).ToList();
-                                foreach (var vakjeNietGedeeld in vakjesNietGedeeld)
+                                var vakjesInBeideSets = set.Vakjes.Intersect(setVanDeze.Vakjes).ToList();
+                                var bommenInVakjesInBeideNodigGezienVanuitSet = set.CountVanBommenDieErMoetenZijn - (set.Vakjes.Count - vakjesInBeideSets.Count);
+                                var countGuaranteedNotBombsInIntersection = vakjesInBeideSets.Count - set.CountVanBommenDieErMoetenZijn;
+
+                                if (bommenInVakjesInBeideNodigGezienVanuitSet == setVanDeze.CountVanBommenDieErMoetenZijn)
                                 {
-                                    if (vakjeNietGedeeld.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedNoBom)
+                                    var vakjesNietGedeeld = setVanDeze.Vakjes.Except(vakjesInBeideSets).ToList();
+                                    foreach (var vakjeNietGedeeld in vakjesNietGedeeld)
                                     {
-                                        vakjeNietGedeeld.VakjeBerekeningen.BerekendVakjeType = BerekendVakjeType.GuaranteedNoBom;
-                                        iteratie.Vondsten.Add(new BommenBepalerStatsIteratieVondst(iteratie, vakjeNietGedeeld, VondstType.SetsBasedGuaranteedNoBomb));
+                                        if (vakjeNietGedeeld.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedNoBom)
+                                        {
+                                            vakjeNietGedeeld.VakjeBerekeningen.BerekendVakjeType = BerekendVakjeType.GuaranteedNoBom;
+                                            iteratie.Vondsten.Add(new BommenBepalerStatsIteratieVondst(iteratie, vakjeNietGedeeld, VondstType.SetsBasedGuaranteedNoBomb));
+                                        }
                                     }
                                 }
-                            }
 
-                            //Alleen als we 2 vakjes hebben die overlappen is er de mogelijkheid dat maar 1 van de 2 een bom is
-                            //if (vakjesInBeideSets.Count > 1 && bommenInVakjesInBeideNodigGezienVanuitSet > 0)
-                            //{
-                            //if (setVanDeze.CountVanBommenDieErMoetenZijn - countGuaranteedNotBombsInIntersection == setVanDeze.Vakjes.Count - vakjesInBeideSets.Count)
-                            if (setVanDeze.Vakjes.Count - countGuaranteedNotBombsInIntersection == setVanDeze.CountVanBommenDieErMoetenZijn)
-                            {
-                                var vakjesNietGedeeld = setVanDeze.Vakjes.Except(vakjesInBeideSets).ToList();
-                                foreach (var vakjeNietGedeeld in vakjesNietGedeeld)
+                                //Alleen als we 2 vakjes hebben die overlappen is er de mogelijkheid dat maar 1 van de 2 een bom is
+                                //if (vakjesInBeideSets.Count > 1 && bommenInVakjesInBeideNodigGezienVanuitSet > 0)
+                                //{
+                                //if (setVanDeze.CountVanBommenDieErMoetenZijn - countGuaranteedNotBombsInIntersection == setVanDeze.Vakjes.Count - vakjesInBeideSets.Count)
+                                if (setVanDeze.Vakjes.Count - countGuaranteedNotBombsInIntersection == setVanDeze.CountVanBommenDieErMoetenZijn)
                                 {
-                                    if (vakjeNietGedeeld.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedBom)
+                                    var vakjesNietGedeeld = setVanDeze.Vakjes.Except(vakjesInBeideSets).ToList();
+                                    foreach (var vakjeNietGedeeld in vakjesNietGedeeld)
                                     {
-                                        vakjeNietGedeeld.VakjeBerekeningen.BerekendVakjeType = BerekendVakjeType.GuaranteedBom;
-                                        iteratie.Vondsten.Add(new BommenBepalerStatsIteratieVondst(iteratie, vakjeNietGedeeld, VondstType.SetsBasedGuaranteedBomb));
+                                        if (vakjeNietGedeeld.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedBom)
+                                        {
+                                            vakjeNietGedeeld.VakjeBerekeningen.BerekendVakjeType = BerekendVakjeType.GuaranteedBom;
+                                            iteratie.Vondsten.Add(new BommenBepalerStatsIteratieVondst(iteratie, vakjeNietGedeeld, VondstType.SetsBasedGuaranteedBomb));
+                                        }
                                     }
                                 }
+                                //}
                             }
-                            //}
                         }
                     }
                 }

@@ -63,15 +63,8 @@ namespace DeveSparkleyGalaxySweeperBot
             var potentialBombs = unrevealedVakjes.Where(t => t.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedNoBom).ToList();
             var guaranteedBombs = potentialBombs.Where(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom).ToList();
 
-            List<Vakje> vakjesMetBomErnaast;
-            if (_botconfig.AlwaysAvoidClickingOpenFields)
-            {
-                vakjesMetBomErnaast = unrevealedVakjes.Where(t => t.SurroundingVakjes.Any(z => z != null && z.IsBomb)).ToList();
-            }
-            else
-            {
-                vakjesMetBomErnaast = potentialBombs.Where(t => t.SurroundingVakjes.Any(z => z != null && z.IsBomb)).ToList();
-            }
+            var vakjesMetBomErnaast = potentialBombs.Where(t => t.SurroundingVakjes.Any(z => z != null && z.IsBomb)).ToList();
+            var vakjesMetBomErnaastDieOokGuaranteedGeenBomKunnenZijn = unrevealedVakjes.Where(t => t.SurroundingVakjes.Any(z => z != null && z.IsBomb)).ToList();
 
             GalaxyVisualizator.RenderToConsole(deVakjesArray, _logger);
 
@@ -107,7 +100,7 @@ namespace DeveSparkleyGalaxySweeperBot
             _logger.WriteLine(string.Empty);
 
             _logger.WriteLine("Vakjes die op z'n minst een bom er naast hebben (dus sowieso geen 0 zijn):");
-            foreach (var maybeBom in vakjesMetBomErnaast.Take(5))
+            foreach (var maybeBom in vakjesMetBomErnaastDieOokGuaranteedGeenBomKunnenZijn.Take(5))
             {
                 _logger.WriteLine($"\t{maybeBom.ToString()}");
             }
@@ -131,6 +124,16 @@ namespace DeveSparkleyGalaxySweeperBot
                 {
                     var hetVakjeWatWeGaanKlikken = vakjesMetBomErnaast.First();
                     _logger.WriteLine($"Beste keuze (Vakje met bom ernaast): {hetVakjeWatWeGaanKlikken}", ConsoleColor.DarkCyan);
+                    if (game.myTurn)
+                    {
+                        _logger.WriteLine("Sweeping...", ConsoleColor.Red);
+                        _galaxySweeperApiHelper.Sweep(game.id, hetVakjeWatWeGaanKlikken.X, hetVakjeWatWeGaanKlikken.Y);
+                    }
+                }
+                else if (_botconfig.AlwaysAvoidClickingOpenFields && vakjesMetBomErnaastDieOokGuaranteedGeenBomKunnenZijn.Any())
+                {
+                    var hetVakjeWatWeGaanKlikken = vakjesMetBomErnaastDieOokGuaranteedGeenBomKunnenZijn.First();
+                    _logger.WriteLine($"Beste keuze (Vakje met bom ernaast wat een Guaranteed Not Bomb is): {hetVakjeWatWeGaanKlikken}", ConsoleColor.DarkCyan);
                     if (game.myTurn)
                     {
                         _logger.WriteLine("Sweeping...", ConsoleColor.Red);
