@@ -100,7 +100,7 @@ namespace DeveSparkleyGalaxySweeperBot
             _logger.WriteLine(string.Empty);
 
             _logger.WriteLine("Vakjes die op z'n minst een bom er naast hebben (dus sowieso geen 0 zijn):");
-            foreach (var maybeBom in vakjesMetBomErnaastDieOokGuaranteedGeenBomKunnenZijn.Take(5))
+            foreach (var maybeBom in vakjesMetBomErnaast.Take(5))
             {
                 _logger.WriteLine($"\t{maybeBom.ToString()}");
             }
