@@ -14,16 +14,25 @@ namespace DeveSparkleyGalaxySweeperBot.Models
         {
             get
             {
-                if (Sets.Count == 0)
+                switch (BerekendVakjeType)
                 {
-                    if (TheBigUnrevealedSet == null)
-                    {
+                    case BerekendVakjeType.GuaranteedBom:
+                        return 100;
+                    case BerekendVakjeType.GuaranteedNoBom:
                         return 0;
-                    }
-                    return TheBigUnrevealedSet.BerekendeKansVoorDitSet;
-                }
+                    case BerekendVakjeType.Unknwon:
+                    default:
+                        if (Sets.Count == 0)
+                        {
+                            if (TheBigUnrevealedSet == null)
+                            {
+                                return 0;
+                            }
+                            return TheBigUnrevealedSet.BerekendeKansVoorDitSet;
+                        }
 
-                return Sets.Max(t => t.BerekendeKansVoorDitSet);
+                        return Sets.Max(t => t.BerekendeKansVoorDitSet);
+                }
             }
         }
     }

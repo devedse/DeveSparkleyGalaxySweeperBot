@@ -1,29 +1,39 @@
 ﻿using DeveSparkleyGalaxySweeperBot.Helpers;
 using DeveSparkleyGalaxySweeperBot.Models;
+using DeveSparkleyGalaxySweeperBot.Stats;
 using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace DeveSparkleyGalaxySweeperBot
 {
     public static class BommenBepaler
     {
-        public static void BepaalBommenMulti(Vakje[,] deVakjesArray)
+        public static BommenBepalerStats BepaalBommenMulti(Vakje[,] deVakjesArray)
         {
+            var stats = new BommenBepalerStats();
+
             int width = deVakjesArray.GetLength(0);
             int height = deVakjesArray.GetLength(1);
 
             bool doorGaan = true;
-            int hoeveelsteKeer = 0;
+            int iteraties = 0;
             while (doorGaan)
             {
-                doorGaan = BepaalBommen(deVakjesArray, width, height);
-                Console.WriteLine($"{hoeveelsteKeer}: Bommen gevonden: {TwoDimensionalArrayHelper.Flatten(deVakjesArray).Count(t => t != null && t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom)}");
-                hoeveelsteKeer++;
+                var iteratie = BepaalBommen(deVakjesArray, width, height);
+                stats.Iteraties.Add(iteratie);
+                doorGaan = iteratie.Vondsten.Any();
+                Console.WriteLine($"{iteraties}: Bommen gevonden: {TwoDimensionalArrayHelper.Flatten(deVakjesArray).Count(t => t != null && t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom)}");
+                iteraties++;
             }
+            Debug.WriteLine($"Totaal iteraties: {iteraties}");
+            return stats;
         }
 
-        public static bool BepaalBommen(Vakje[,] deVakjesArray, int width, int height)
+        public static BommenBepalerStatsIteratie BepaalBommen(Vakje[,] deVakjesArray, int width, int height)
         {
+            var iteratie = new BommenBepalerStatsIteratie();
+
             //Clear de sets
             var flatVakjes = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null);
             foreach (var vakje in flatVakjes)
@@ -40,7 +50,6 @@ namespace DeveSparkleyGalaxySweeperBot
 
 
 
-            bool erIsIetsBerekend = false;
 
             foreach (var vakje in flatVakjes)
             {
@@ -57,7 +66,7 @@ namespace DeveSparkleyGalaxySweeperBot
                         if (unrevealed.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedBom)
                         {
                             unrevealed.VakjeBerekeningen.BerekendVakjeType = BerekendVakjeType.GuaranteedBom;
-                            erIsIetsBerekend = true;
+                            iteratie.Vondsten.Add(new BommenBepalerStatsIteratieVondst(unrevealed, VondstType.SimpleGuaranteedBomb));
                         }
                     }
                 }
@@ -68,7 +77,7 @@ namespace DeveSparkleyGalaxySweeperBot
                         if (unrevealed.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedNoBom)
                         {
                             unrevealed.VakjeBerekeningen.BerekendVakjeType = BerekendVakjeType.GuaranteedNoBom;
-                            erIsIetsBerekend = true;
+                            iteratie.Vondsten.Add(new BommenBepalerStatsIteratieVondst(unrevealed, VondstType.SimpleGuaranteedNoBomb));
                         }
                     }
                 }
@@ -120,18 +129,60 @@ namespace DeveSparkleyGalaxySweeperBot
                         //if (set.Vakjes.Intersect(setVanDeze.Vakjes).Count() == setVanDeze.Vakjes.Count)
                         //{
 
-                        var vakjesNietInDezeSet = set.Vakjes.Except(setVanDeze.Vakjes).ToList();
-                        if (vakjesNietInDezeSet.Count == set.CountVanBommenDieErMoetenZijn - setVanDeze.CountVanBommenDieErMoetenZijn)
+                        //var vakjesNietInDezeSet = set.Vakjes.Except(setVanDeze.Vakjes).ToList();
+                        //if (vakjesNietInDezeSet.Count == set.CountVanBommenDieErMoetenZijn - setVanDeze.CountVanBommenDieErMoetenZijn)
+                        //{
+                        //    foreach (var vakjeNietInDezeSet in vakjesNietInDezeSet)
+                        //    {
+                        //        if (vakjeNietInDezeSet.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedBom)
+                        //        {
+                        //            vakjeNietInDezeSet.VakjeBerekeningen.BerekendVakjeType = BerekendVakjeType.GuaranteedBom;
+                        //            erIsIetsBerekend = true;
+                        //        }
+                        //    }
+                        //}
+
+
+
+                        var vakjesInBeideSets = set.Vakjes.Intersect(setVanDeze.Vakjes).ToList();
+                        //var bommenInVakjesInBeideNodigGezienVanuitSet = setVanDeze.CountVanBommenDieErMoetenZijn - (setVanDeze.Vakjes.Count - vakjesInBeideSets.Count);
+                        var bommenInVakjesInBeideNodigGezienVanuitSet = set.CountVanBommenDieErMoetenZijn - (set.Vakjes.Count - vakjesInBeideSets.Count);
+
+                        if (bommenInVakjesInBeideNodigGezienVanuitSet == setVanDeze.CountVanBommenDieErMoetenZijn)
                         {
-                            foreach (var vakjeNietInDezeSet in vakjesNietInDezeSet)
+                            var vakjesNietGedeeld = setVanDeze.Vakjes.Except(vakjesInBeideSets).ToList();
+                            foreach (var vakjeNietGedeeld in vakjesNietGedeeld)
                             {
-                                if (vakjeNietInDezeSet.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedBom)
+                                if (vakjeNietGedeeld.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedNoBom)
                                 {
-                                    vakjeNietInDezeSet.VakjeBerekeningen.BerekendVakjeType = BerekendVakjeType.GuaranteedBom;
-                                    erIsIetsBerekend = true;
+                                    vakjeNietGedeeld.VakjeBerekeningen.BerekendVakjeType = BerekendVakjeType.GuaranteedNoBom;
+                                    iteratie.Vondsten.Add(new BommenBepalerStatsIteratieVondst(vakjeNietGedeeld, VondstType.SetsBasedGuaranteedNoBomb));
                                 }
                             }
                         }
+
+                        //Alleen als we 2 vakjes hebben die overlappen is er de mogelijkheid dat maar 1 van de 2 een bom is
+                        if (vakjesInBeideSets.Count > 1 && bommenInVakjesInBeideNodigGezienVanuitSet >= 0)
+                        {
+                            if (setVanDeze.Vakjes.Count - vakjesInBeideSets.Count == setVanDeze.CountVanBommenDieErMoetenZijn - bommenInVakjesInBeideNodigGezienVanuitSet)
+                            {
+                                var vakjesNietGedeeld = setVanDeze.Vakjes.Except(vakjesInBeideSets).ToList();
+                                foreach (var vakjeNietGedeeld in vakjesNietGedeeld)
+                                {
+                                    if (vakjeNietGedeeld.VakjeBerekeningen.BerekendVakjeType != BerekendVakjeType.GuaranteedBom)
+                                    {
+                                        vakjeNietGedeeld.VakjeBerekeningen.BerekendVakjeType = BerekendVakjeType.GuaranteedBom;
+                                        iteratie.Vondsten.Add(new BommenBepalerStatsIteratieVondst(vakjeNietGedeeld, VondstType.SetsBasedGuaranteedBomb));
+                                    }
+                                }
+                            }
+                        }
+
+
+                        //if (0 == set.CountVanBommenDieErMoetenZijn - setVanDeze.CountVanBommenDieErMoetenZijn)
+                        //{
+
+                        //}
                         //}
                     }
                 }
@@ -182,7 +233,7 @@ namespace DeveSparkleyGalaxySweeperBot
             //        }
             //    }
             //}
-            return erIsIetsBerekend;
+            return iteratie;
         }
     }
 }
