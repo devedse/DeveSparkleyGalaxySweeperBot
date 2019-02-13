@@ -19,7 +19,7 @@ namespace DeveSparkleyGalaxySweeperBot
         {
             Debug.WriteLine("Iteratie");
 
-            if (current.SelectMany(t => t.VakjeSetDeluxe.Vakjes).Count() == deOverallSet.Vakjes.Count)
+            if (current.SelectMany(t => t.Intersection).Count() == deOverallSet.Vakjes.Count)
             {
                 return new List<List<IntersectionAndSet>>() { current };
             }
@@ -27,16 +27,19 @@ namespace DeveSparkleyGalaxySweeperBot
             var allItems = new List<List<IntersectionAndSet>>();
             foreach (var set in lijstMetAlleSets)
             {
-                var intersection = deOverallSet.Vakjes.Intersect(set.Vakjes).ToList();
-                var vrijeVakjesOver = deOverallSet.Vakjes.Except(current.SelectMany(t => t.VakjeSetDeluxe.Vakjes)).ToList();
-
-                if (vrijeVakjesOver.Intersect(intersection).Count() == intersection.Count)
+                if (set != deOverallSet)
                 {
-                    //Hij past er nog in
-                    var clone = current.ToList();
-                    clone.Add(new IntersectionAndSet(intersection, set));
-                    var foundItems = BepaalSets(deOverallSet, lijstMetAlleSets, clone);
-                    allItems.AddRange(foundItems);
+                    var intersection = deOverallSet.Vakjes.Intersect(set.Vakjes).ToList();
+                    var vrijeVakjesOver = deOverallSet.Vakjes.Except(current.SelectMany(t => t.VakjeSetDeluxe.Vakjes)).ToList();
+
+                    if (vrijeVakjesOver.Intersect(intersection).Count() == intersection.Count)
+                    {
+                        //Hij past er nog in
+                        var clone = current.ToList();
+                        clone.Add(new IntersectionAndSet(intersection, set));
+                        var foundItems = BepaalSets(deOverallSet, lijstMetAlleSets, clone);
+                        allItems.AddRange(foundItems);
+                    }
                 }
             }
             return allItems;

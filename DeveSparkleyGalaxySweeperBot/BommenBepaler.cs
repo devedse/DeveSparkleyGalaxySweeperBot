@@ -2,7 +2,6 @@
 using DeveSparkleyGalaxySweeperBot.Helpers;
 using DeveSparkleyGalaxySweeperBot.Models;
 using DeveSparkleyGalaxySweeperBot.Stats;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -29,7 +28,7 @@ namespace DeveSparkleyGalaxySweeperBot
             }
         }
 
-        public static BommenBepalerStats BepaalBommenMulti2(Vakje[,] deVakjesArray)
+        public static BommenBepalerStats BepaalBommenMulti2(Vakje[,] deVakjesArray, BotConfig botConfig)
         {
             var stats = new BommenBepalerStats();
 
@@ -58,7 +57,7 @@ namespace DeveSparkleyGalaxySweeperBot
             int iteraties = 1;
             while (doorGaan)
             {
-                var iteratie = BepaalBommen2(deVakjesArray, width, height);
+                var iteratie = BepaalBommen2(deVakjesArray, width, height, botConfig);
                 iteratie.IteratieNummer = iteraties;
                 stats.Iteraties.Add(iteratie);
                 doorGaan = iteratie.Vondsten.Any();
@@ -70,7 +69,7 @@ namespace DeveSparkleyGalaxySweeperBot
 
 
 
-        public static BommenBepalerStatsIteratie BepaalBommen2(Vakje[,] deVakjesArray, int width, int height)
+        public static BommenBepalerStatsIteratie BepaalBommen2(Vakje[,] deVakjesArray, int width, int height, BotConfig botConfig)
         {
             var iteratie = new BommenBepalerStatsIteratie();
 
@@ -88,24 +87,31 @@ namespace DeveSparkleyGalaxySweeperBot
 
                 foreach (var filledIntersection in filledIntersections)
                 {
-                    if (filledIntersection.Sum(t => t.MinCountGuaranteedNotBombsInIntersection) == set.MinCountGuaranteedBombs)
+                    var totGuaranteedNotBombs = filledIntersection.Sum(t => t.MinCountGuaranteedNotBombsInIntersection);
+                    if (totGuaranteedNotBombs == set.Vakjes.Count - set.MinCountGuaranteedBombs)
                     {
                         //Shouldn't be required but we're now sure that the max count of bombs here is in fact this
                         //set.MinCountGuaranteedNotBombs = Math.Min(set.Vakjes.Count - set.MinCountGuaranteedBombs, set.MinCountGuaranteedNotBombs);
 
-                        foreach(var intersectionSet in filledIntersection)
+                        foreach (var intersectionSet in filledIntersection)
                         {
                             var guaranteedBommenHier = intersectionSet.Intersection.Count - intersectionSet.MinCountGuaranteedNotBombsInIntersection;
                             var newSet = new VakjeSetDeluxe(guaranteedBommenHier, intersectionSet.MinCountGuaranteedNotBombsInIntersection, intersectionSet.Intersection);
                             setsToAdd.Add(newSet);
                         }
                     }
+
+                    foreach (var intersectionSet in filledIntersection)
+                    {
+                        var theRest = filledIntersection.Except(new List<IntersectionAndSet>() { intersectionSet }).ToList();
+                        var minGuaranteedBombsHere
+                    }
+
                 }
+                return iteratie;
             }
-            return iteratie;
+
         }
-
-
 
 
 
