@@ -1,0 +1,16 @@
+﻿using System.Collections.Generic;
+
+namespace DeveSparkleyGalaxySweeperBot.Models
+{
+    public class IntersectionAndSet
+    {
+        public List<Vakje> Intersection { get; }
+        public VakjeSetDeluxe VakjeSetDeluxe { get; }
+
+        public IntersectionAndSet(List<Vakje> intersection, VakjeSetDeluxe vakjeSetDeluxe)
+        {
+            Intersection = intersection;
+            VakjeSetDeluxe = vakjeSetDeluxe;
+        }
+    }
+}

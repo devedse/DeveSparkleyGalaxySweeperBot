@@ -28,99 +28,121 @@ namespace DeveSparkleyGalaxySweeperBot
             }
         }
 
-        //public static BommenBepalerStats BepaalBommenMulti2(Vakje[,] deVakjesArray)
-        //{
-        //    var stats = new BommenBepalerStats();
+        public static BommenBepalerStats BepaalBommenMulti2(Vakje[,] deVakjesArray)
+        {
+            var stats = new BommenBepalerStats();
 
-        //    int width = deVakjesArray.GetLength(0);
-        //    int height = deVakjesArray.GetLength(1);
+            int width = deVakjesArray.GetLength(0);
+            int height = deVakjesArray.GetLength(1);
 
-        //    var initialIteratie = new BommenBepalerStatsIteratie();
-        //    stats.Iteraties.Add(initialIteratie);
+            var initialIteratie = new BommenBepalerStatsIteratie();
+            stats.Iteraties.Add(initialIteratie);
 
-        //    var flatVakjes = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null);
-        //    foreach (var vakje in flatVakjes)
-        //    {
-        //        if (vakje.IsNumber)
-        //        {
-        //            var unrevealedTilesOmMeHeen = vakje.SurroundingVakjes.Where(t => !t.Revealed).ToList();
+            var flatVakjes = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null);
+            foreach (var vakje in flatVakjes)
+            {
+                if (vakje.IsNumber)
+                {
+                    var unrevealedTilesOmMeHeen = vakje.SurroundingVakjes.Where(t => !t.Revealed).ToList();
+                    var revealedBommenOmMeHeen = vakje.SurroundingVakjes.Where(t => t.IsBomb).ToList();
+                    var revealedNietBommenOmMeHeen = vakje.SurroundingVakjes.Where(t => t.IsNumber).ToList();
 
-        //            AddSet(initialIteratie, vakje.Number, unrevealedTilesOmMeHeen);
-        //        }
-        //    }
+                    var bommenInDitSet = vakje.Number - revealedBommenOmMeHeen.Count;
+                    var nietBommenInDitSet = unrevealedTilesOmMeHeen.Count - bommenInDitSet;
+                    AddSetDeluxe(initialIteratie, bommenInDitSet, nietBommenInDitSet, unrevealedTilesOmMeHeen);
+                }
+            }
 
-        //    bool doorGaan = true;
-        //    int iteraties = 1;
-        //    while (doorGaan)
-        //    {
-        //        var iteratie = BepaalBommen2(deVakjesArray, width, height);
-        //        iteratie.IteratieNummer = iteraties;
-        //        stats.Iteraties.Add(iteratie);
-        //        doorGaan = iteratie.Vondsten.Any();
-        //        iteraties++;
-        //    }
-        //    Debug.WriteLine($"Totaal iteraties: {iteraties}");
-        //    return stats;
-        //}
-
-
-
-        //public static BommenBepalerStatsIteratie BepaalBommen2(Vakje[,] deVakjesArray, int width, int height)
-        //{
-        //    var iteratie = new BommenBepalerStatsIteratie();
-
-        //    var flatVakjes = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null);
-        //    var allSets = flatVakjes.SelectMany(t => t.VakjeBerekeningen.SetsDeluxe).Distinct();
-
-        //    foreach (var set in allSets)
-        //    {
-        //        foreach (var setVanDeze in allSets)
-        //        {
-        //            //var vakjesOver = n
-
-        //            if (set != setVanDeze)
-        //            {
-
-        //                var vakjesInBeideSets = set.Vakjes.Intersect(setVanDeze.Vakjes).ToList();
-
-        //                if (vakjesInBeideSets.Count > 0)
-        //                {
-        //                    var vakjesInSetDieNietInSetVanDezeZitten = set.Vakjes.Except(setVanDeze.Vakjes).ToList();
-
-        //                    var minCountGuaranteedBombsInIntersection = set.MinCountGuaranteedBombs - vakjesInSetDieNietInSetVanDezeZitten.Count;
-        //                    var minCountGuaranteedNotBombsInIntersection = vakjesInBeideSets.Count - set.MinCountGuaranteedBombs;
-
-        //                    //if (vakjesInSetDieNietInSetVanDezeZitten.Count == 0)
-        //                    if (minCountGuaranteedBombsInIntersection > 0)
-        //                    {
-        //                        AddSetDeluxe(iteratie, setVanDeze.MinCountGuaranteedBombs - minCountGuaranteedBombsInIntersection, 0, vakjesInSetDieNietInSetVanDezeZitten);
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    foreach (var set in allSets)
-        //    {
-        //        //we kijken nu per set
-        //        foreach (var vakjeInSet in set.Vakjes)
-        //        {
-        //            foreach (var setVanDeze in vakjeInSet.VakjeBerekeningen.Sets)
-        //            {
-        //                if (set != setVanDeze)
-        //                {
-        //                    var vakjesInBeideSets = set.Vakjes.Intersect(setVanDeze.Vakjes).ToList();
-        //                    var countGuaranteedBombsInIntersection = set.CountVanBommenDieErMoetenZijn - (set.Vakjes.Count - vakjesInBeideSets.Count);
-        //                    var countGuaranteedNotBombsInIntersection = vakjesInBeideSets.Count - set.CountVanBommenDieErMoetenZijn;
+            bool doorGaan = true;
+            int iteraties = 1;
+            while (doorGaan)
+            {
+                var iteratie = BepaalBommen2(deVakjesArray, width, height);
+                iteratie.IteratieNummer = iteraties;
+                stats.Iteraties.Add(iteratie);
+                doorGaan = iteratie.Vondsten.Any();
+                iteraties++;
+            }
+            Debug.WriteLine($"Totaal iteraties: {iteraties}");
+            return stats;
+        }
 
 
-        //                }
-        //            }
-        //        }
-        //    }
 
-        //    return iteratie;
-        //}
+        public static BommenBepalerStatsIteratie BepaalBommen2(Vakje[,] deVakjesArray, int width, int height)
+        {
+            var iteratie = new BommenBepalerStatsIteratie();
+
+            var flatVakjes = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null);
+            var allSets = flatVakjes.SelectMany(t => t.VakjeBerekeningen.SetsDeluxe).Distinct();
+
+
+            foreach (var set in allSets)
+            {
+                var alleOverlappendeSets = set.Vakjes.SelectMany(t => t.VakjeBerekeningen.Sets).Distinct().ToList();
+
+                for (int i = 0; i < alleOverlappendeSets.Count; i++)
+                {
+                    var blahh = new List<IntersectionAndSet>();
+                    //var theRest = alleOverlappendeSets.Except();
+
+                    //foreach(var possibleFitInTheRest in theRest)
+                    //{
+                    //    var intersectionBetweenSets = set.Vakjes.Intersect(possibleFitInTheRest.Vakjes).ToList();
+                    //    if (!intersectionBetweenSets.Intersect(theRest.SelectMany(t => t.Vakjes)).Any())
+                    //    {
+                    //        theRest.a
+                    //    }
+                    //}
+                }
+
+                foreach (var setVanDeze in allSets)
+                {
+                    //var vakjesOver = n
+
+                    if (set != setVanDeze)
+                    {
+
+                        var vakjesInBeideSets = set.Vakjes.Intersect(setVanDeze.Vakjes).ToList();
+
+                        if (vakjesInBeideSets.Count > 0)
+                        {
+                            var vakjesInSetDieNietInSetVanDezeZitten = set.Vakjes.Except(setVanDeze.Vakjes).ToList();
+
+                            var minCountGuaranteedBombsInIntersection = set.MinCountGuaranteedBombs - vakjesInSetDieNietInSetVanDezeZitten.Count;
+                            var minCountGuaranteedNotBombsInIntersection = vakjesInBeideSets.Count - set.MinCountGuaranteedBombs;
+
+                            //if (vakjesInSetDieNietInSetVanDezeZitten.Count == 0)
+                            if (minCountGuaranteedBombsInIntersection > 0)
+                            {
+                                AddSetDeluxe(iteratie, setVanDeze.MinCountGuaranteedBombs - minCountGuaranteedBombsInIntersection, 0, vakjesInSetDieNietInSetVanDezeZitten);
+                            }
+                        }
+                    }
+                }
+            }
+
+            //foreach (var set in allSets)
+            //{
+            //    //we kijken nu per set
+            //    foreach (var vakjeInSet in set.Vakjes)
+            //    {
+            //        foreach (var setVanDeze in vakjeInSet.VakjeBerekeningen.Sets)
+            //        {
+            //            if (set != setVanDeze)
+            //            {
+            //                var vakjesInBeideSets = set.Vakjes.Intersect(setVanDeze.Vakjes).ToList();
+            //                var countGuaranteedBombsInIntersection = set.CountVanBommenDieErMoetenZijn - (set.Vakjes.Count - vakjesInBeideSets.Count);
+            //                var countGuaranteedNotBombsInIntersection = vakjesInBeideSets.Count - set.CountVanBommenDieErMoetenZijn;
+
+
+            //            }
+            //        }
+            //    }
+            //}
+
+            return iteratie;
+        }
 
 
 
