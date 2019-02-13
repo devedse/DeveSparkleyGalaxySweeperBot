@@ -4,8 +4,8 @@ namespace DeveSparkleyGalaxySweeperBot.Models
 {
     public class VakjeSetDeluxe
     {
-        public int MinCountGuaranteedBombs { get; }
-        public int MinCountGuaranteedNotBombs { get; }
+        public int MinCountGuaranteedBombs { get; set; }
+        public int MinCountGuaranteedNotBombs { get; set; }
         public List<Vakje> Vakjes { get; } = new List<Vakje>();
 
         public decimal BerekendeKansVoorDitSet

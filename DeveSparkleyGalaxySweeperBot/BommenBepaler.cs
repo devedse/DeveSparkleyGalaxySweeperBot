@@ -2,6 +2,7 @@
 using DeveSparkleyGalaxySweeperBot.Helpers;
 using DeveSparkleyGalaxySweeperBot.Models;
 using DeveSparkleyGalaxySweeperBot.Stats;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -77,70 +78,30 @@ namespace DeveSparkleyGalaxySweeperBot
             var allSets = flatVakjes.SelectMany(t => t.VakjeBerekeningen.SetsDeluxe).Distinct();
 
 
+            var setsToAdd = new List<VakjeSetDeluxe>();
+
             foreach (var set in allSets)
             {
-                var alleOverlappendeSets = set.Vakjes.SelectMany(t => t.VakjeBerekeningen.Sets).Distinct().ToList();
+                var alleOverlappendeSets = set.Vakjes.SelectMany(t => t.VakjeBerekeningen.SetsDeluxe).Distinct().ToList();
 
-                for (int i = 0; i < alleOverlappendeSets.Count; i++)
+                var filledIntersections = SetBepaler.BepaalSets(set, alleOverlappendeSets);
+
+                foreach (var filledIntersection in filledIntersections)
                 {
-                    var blahh = new List<IntersectionAndSet>();
-                    //var theRest = alleOverlappendeSets.Except();
-
-                    //foreach(var possibleFitInTheRest in theRest)
-                    //{
-                    //    var intersectionBetweenSets = set.Vakjes.Intersect(possibleFitInTheRest.Vakjes).ToList();
-                    //    if (!intersectionBetweenSets.Intersect(theRest.SelectMany(t => t.Vakjes)).Any())
-                    //    {
-                    //        theRest.a
-                    //    }
-                    //}
-                }
-
-                foreach (var setVanDeze in allSets)
-                {
-                    //var vakjesOver = n
-
-                    if (set != setVanDeze)
+                    if (filledIntersection.Sum(t => t.MinCountGuaranteedNotBombsInIntersection) == set.MinCountGuaranteedBombs)
                     {
+                        //Shouldn't be required but we're now sure that the max count of bombs here is in fact this
+                        //set.MinCountGuaranteedNotBombs = Math.Min(set.Vakjes.Count - set.MinCountGuaranteedBombs, set.MinCountGuaranteedNotBombs);
 
-                        var vakjesInBeideSets = set.Vakjes.Intersect(setVanDeze.Vakjes).ToList();
-
-                        if (vakjesInBeideSets.Count > 0)
+                        foreach(var intersectionSet in filledIntersection)
                         {
-                            var vakjesInSetDieNietInSetVanDezeZitten = set.Vakjes.Except(setVanDeze.Vakjes).ToList();
-
-                            var minCountGuaranteedBombsInIntersection = set.MinCountGuaranteedBombs - vakjesInSetDieNietInSetVanDezeZitten.Count;
-                            var minCountGuaranteedNotBombsInIntersection = vakjesInBeideSets.Count - set.MinCountGuaranteedBombs;
-
-                            //if (vakjesInSetDieNietInSetVanDezeZitten.Count == 0)
-                            if (minCountGuaranteedBombsInIntersection > 0)
-                            {
-                                AddSetDeluxe(iteratie, setVanDeze.MinCountGuaranteedBombs - minCountGuaranteedBombsInIntersection, 0, vakjesInSetDieNietInSetVanDezeZitten);
-                            }
+                            var guaranteedBommenHier = intersectionSet.Intersection.Count - intersectionSet.MinCountGuaranteedNotBombsInIntersection;
+                            var newSet = new VakjeSetDeluxe(guaranteedBommenHier, intersectionSet.MinCountGuaranteedNotBombsInIntersection, intersectionSet.Intersection);
+                            setsToAdd.Add(newSet);
                         }
                     }
                 }
             }
-
-            //foreach (var set in allSets)
-            //{
-            //    //we kijken nu per set
-            //    foreach (var vakjeInSet in set.Vakjes)
-            //    {
-            //        foreach (var setVanDeze in vakjeInSet.VakjeBerekeningen.Sets)
-            //        {
-            //            if (set != setVanDeze)
-            //            {
-            //                var vakjesInBeideSets = set.Vakjes.Intersect(setVanDeze.Vakjes).ToList();
-            //                var countGuaranteedBombsInIntersection = set.CountVanBommenDieErMoetenZijn - (set.Vakjes.Count - vakjesInBeideSets.Count);
-            //                var countGuaranteedNotBombsInIntersection = vakjesInBeideSets.Count - set.CountVanBommenDieErMoetenZijn;
-
-
-            //            }
-            //        }
-            //    }
-            //}
-
             return iteratie;
         }
 

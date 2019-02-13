@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DeveSparkleyGalaxySweeperBot.Models
 {
@@ -12,5 +13,8 @@ namespace DeveSparkleyGalaxySweeperBot.Models
             Intersection = intersection;
             VakjeSetDeluxe = vakjeSetDeluxe;
         }
+
+        public int MinCountGuaranteedBombsInIntersection => Math.Max(0, Intersection.Count - (VakjeSetDeluxe.Vakjes.Count - VakjeSetDeluxe.MinCountGuaranteedBombs));
+        public int MinCountGuaranteedNotBombsInIntersection => Math.Max(0, Intersection.Count - (VakjeSetDeluxe.Vakjes.Count - VakjeSetDeluxe.MinCountGuaranteedNotBombs));
     }
 }
