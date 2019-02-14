@@ -15,15 +15,15 @@ namespace DeveSparkleyGalaxySweeperBot.Helpers
                 return false;
             }
 
-            if (set1.MinCountGuaranteedBombs != set2.MinCountGuaranteedBombs)
-            {
-                return false;
-            }
+            //if (set1.MinCountGuaranteedBombs != set2.MinCountGuaranteedBombs)
+            //{
+            //    return false;
+            //}
 
-            if (set1.MinCountGuaranteedNotBombs != set2.MinCountGuaranteedNotBombs)
-            {
-                return false;
-            }
+            //if (set1.MinCountGuaranteedNotBombs != set2.MinCountGuaranteedNotBombs)
+            //{
+            //    return false;
+            //}
 
             var intersection = set1.Vakjes.Intersect(set2.Vakjes);
             if (intersection.Count() != set1.Vakjes.Count)
