@@ -62,7 +62,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
                 set7
             };
 
-            var result = SetBepaler.BepaalSets(overallSet, alleSets);
+            var result = SetBepaler.BepaalSetsThatFillMeCompletely(overallSet, alleSets);
 
             Assert.Equal(2, result.Count);
         }

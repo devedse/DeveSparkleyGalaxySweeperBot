@@ -1,5 +1,6 @@
 ﻿using DeveSparkleyGalaxySweeperBot.Config;
 using DeveSparkleyGalaxySweeperBot.Helpers;
+using DeveSparkleyGalaxySweeperBot.Logging;
 using DeveSparkleyGalaxySweeperBot.Models;
 using DeveSparkleyGalaxySweeperBot.Stats;
 using System;
@@ -103,10 +104,17 @@ namespace DeveSparkleyGalaxySweeperBot
                 stats.Iteraties.Add(iteratie);
                 doorGaan = iteratie.Vondsten.Any();
                 iteraties++;
+                BepaalBommenBasedOnSetsDeluxe(flatVakjes);
+                GalaxyVisualizator.RenderToConsole(deVakjesArray, DefaultLoggerFactory.CreateLoggerForTests());
             }
 
 
+            Debug.WriteLine($"Totaal iteraties: {iteraties}");
+            return stats;
+        }
 
+        private static void BepaalBommenBasedOnSetsDeluxe(IEnumerable<Vakje> flatVakjes)
+        {
             var allSets = flatVakjes.SelectMany(t => t.VakjeBerekeningen.SetsDeluxe).Distinct().ToList();
             foreach (var set in allSets)
             {
@@ -148,13 +156,7 @@ namespace DeveSparkleyGalaxySweeperBot
                     }
                 }
             }
-
-
-            Debug.WriteLine($"Totaal iteraties: {iteraties}");
-            return stats;
         }
-
-
 
         public static BommenBepalerStatsIteratie BepaalBommen2(Vakje[,] deVakjesArray, int width, int height, BotConfig botConfig)
         {
@@ -170,7 +172,7 @@ namespace DeveSparkleyGalaxySweeperBot
             {
                 var alleOverlappendeSets = set.Vakjes.SelectMany(t => t.VakjeBerekeningen.SetsDeluxe).Distinct().ToList();
 
-                var filledIntersections = SetBepaler.BepaalSets(set, alleOverlappendeSets);
+                var filledIntersections = SetBepaler.BepaalSetsThatFillMeCompletely(set, alleOverlappendeSets);
 
                 foreach (var filledIntersection in filledIntersections)
                 {
@@ -187,19 +189,51 @@ namespace DeveSparkleyGalaxySweeperBot
                             setsToAdd.Add(newSet);
                         }
                     }
+                }
 
-                    foreach (var intersectionSet in filledIntersection)
+                var notCompletelyFilledIntersections = SetBepaler.BepaalSetsThatDontFillMeCompletely(set, alleOverlappendeSets);
+
+
+                foreach (var notCompletelyFilledIntersection in notCompletelyFilledIntersections)
+                {
+                    var maxBommen = set.Vakjes.Count - set.MinCountGuaranteedNotBombs;
+
+                    var bommenInTheseIntersections = notCompletelyFilledIntersection.Sum(t => t.MinCountGuaranteedBombsInIntersection);
+                    if (bommenInTheseIntersections == maxBommen)
                     {
-                        var theRest = filledIntersection.Except(new List<IntersectionAndSet>() { intersectionSet }).ToList();
-                        var bommenInTheRest = theRest.Sum(t => t.MinCountGuaranteedBombsInIntersection);
-                        if (set.Vakjes.Count - set.MinCountGuaranteedNotBombs == bommenInTheRest)
+                        var vakjesOver = set.Vakjes.Except(notCompletelyFilledIntersection.SelectMany(t => t.VakjeSetDeluxe.Vakjes)).ToList();
+                        if (vakjesOver.Count > 0)
                         {
-                            var newSet = new VakjeSetDeluxe(0, intersectionSet.Intersection.Count, intersectionSet.Intersection);
+                            //Heeft alleen zin als er dus echt nog een set is met vakjes die dus als niet bomb kunnen worden gemarkeerd
+                            var newSet = new VakjeSetDeluxe(0, vakjesOver.Count, vakjesOver);
                             setsToAdd.Add(newSet);
                         }
                     }
 
+
+                    var guaranteedNotBombs = notCompletelyFilledIntersection.Sum(t => t.MinCountGuaranteedNotBombsInIntersection);
+
+                    if (set.Vakjes.Count - set.MinCountGuaranteedBombs == guaranteedNotBombs)
+                    {
+                        var vakjesOver = set.Vakjes.Except(notCompletelyFilledIntersection.SelectMany(t => t.VakjeSetDeluxe.Vakjes)).ToList();
+                        if (vakjesOver.Count > 0)
+                        {
+                            //Heeft alleen zin als er dus echt nog een set is met vakjes die dus als bomb kunnen worden gemarkeerd
+                            var newSet = new VakjeSetDeluxe(vakjesOver.Count, 0, vakjesOver);
+                            setsToAdd.Add(newSet);
+                        }
+                    }
+
+                    //var theRest = filledIntersection.Except(new List<IntersectionAndSet>() { intersectionSet }).ToList();
+                    //if (set.Vakjes.Count - set.MinCountGuaranteedNotBombs == intersectionSet.MinCountGuaranteedBombsInIntersection)
+                    //{
+                    //    var vakjesOfTheRest = theRest.SelectMany(t => t.VakjeSetDeluxe.Vakjes).ToList();
+                    //    var newSet = new VakjeSetDeluxe(0, vakjesOfTheRest.Count, vakjesOfTheRest);
+                    //    setsToAdd.Add(newSet);
+                    //}
                 }
+
+
             }
 
 
@@ -208,6 +242,7 @@ namespace DeveSparkleyGalaxySweeperBot
                 var changed = AddSetDeluxe(allSets, iteratie, newSet.MinCountGuaranteedBombs, newSet.MinCountGuaranteedNotBombs, newSet.Vakjes);
                 if (changed)
                 {
+                    Debug.WriteLine("Added set");
                     iteratie.Vondsten.Add(new BommenBepalerStatsIteratieVondst(iteratie, newSet.Vakjes.First(), VondstType.SetsBasedGuaranteedBomb));
                 }
             }

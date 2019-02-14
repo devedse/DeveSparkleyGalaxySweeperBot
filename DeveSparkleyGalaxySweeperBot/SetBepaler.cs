@@ -8,14 +8,14 @@ namespace DeveSparkleyGalaxySweeperBot
 {
     public static class SetBepaler
     {
-        public static List<List<IntersectionAndSet>> BepaalSets(VakjeSetDeluxe deOverallSet, List<VakjeSetDeluxe> lijstMetAlleSets)
+        public static List<List<IntersectionAndSet>> BepaalSetsThatFillMeCompletely(VakjeSetDeluxe deOverallSet, List<VakjeSetDeluxe> lijstMetAlleSets)
         {
-            var foundItems = BepaalSets(deOverallSet, lijstMetAlleSets, new List<IntersectionAndSet>());
+            var foundItems = BepaalSetsThatFillMeCompletely(deOverallSet, lijstMetAlleSets, new List<IntersectionAndSet>());
             var result = EnsureNoDuplicates(foundItems);
             return result;
         }
 
-        private static List<List<IntersectionAndSet>> BepaalSets(VakjeSetDeluxe deOverallSet, List<VakjeSetDeluxe> lijstMetAlleSets, List<IntersectionAndSet> current)
+        private static List<List<IntersectionAndSet>> BepaalSetsThatFillMeCompletely(VakjeSetDeluxe deOverallSet, List<VakjeSetDeluxe> lijstMetAlleSets, List<IntersectionAndSet> current)
         {
             Debug.WriteLine("Iteratie");
 
@@ -37,7 +37,45 @@ namespace DeveSparkleyGalaxySweeperBot
                         //Hij past er nog in
                         var clone = current.ToList();
                         clone.Add(new IntersectionAndSet(intersection, set));
-                        var foundItems = BepaalSets(deOverallSet, lijstMetAlleSets, clone);
+                        var foundItems = BepaalSetsThatFillMeCompletely(deOverallSet, lijstMetAlleSets, clone);
+                        allItems.AddRange(foundItems);
+                    }
+                }
+            }
+            return allItems;
+        }
+
+        public static List<List<IntersectionAndSet>> BepaalSetsThatDontFillMeCompletely(VakjeSetDeluxe deOverallSet, List<VakjeSetDeluxe> lijstMetAlleSets)
+        {
+            var foundItems = BepaalSetsThatDontFillMeCompletely(deOverallSet, lijstMetAlleSets, new List<IntersectionAndSet>());
+            var result = EnsureNoDuplicates(foundItems);
+            return result;
+        }
+
+        private static List<List<IntersectionAndSet>> BepaalSetsThatDontFillMeCompletely(VakjeSetDeluxe deOverallSet, List<VakjeSetDeluxe> lijstMetAlleSets, List<IntersectionAndSet> current)
+        {
+            Debug.WriteLine("Iteratie");
+
+            if (current.SelectMany(t => t.Intersection).Count() == deOverallSet.Vakjes.Count)
+            {
+                return new List<List<IntersectionAndSet>>() { current };
+            }
+
+            var allItems = new List<List<IntersectionAndSet>>();
+            allItems.Add(current);
+            foreach (var set in lijstMetAlleSets)
+            {
+                if (set != deOverallSet)
+                {
+                    var intersection = deOverallSet.Vakjes.Intersect(set.Vakjes).ToList();
+                    var vrijeVakjesOver = deOverallSet.Vakjes.Except(current.SelectMany(t => t.VakjeSetDeluxe.Vakjes)).ToList();
+
+                    if (vrijeVakjesOver.Intersect(intersection).Count() == intersection.Count)
+                    {
+                        //Hij past er nog in
+                        var clone = current.ToList();
+                        clone.Add(new IntersectionAndSet(intersection, set));
+                        var foundItems = BepaalSetsThatDontFillMeCompletely(deOverallSet, lijstMetAlleSets, clone);
                         allItems.AddRange(foundItems);
                     }
                 }
