@@ -54,7 +54,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, TestBotConfig());
+            var stats = BommenBepaler.BepaalBommenMulti2(deVakjesArray, TestBotConfig());
             stats.Log(logger);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
@@ -96,7 +96,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, TestBotConfig());
+            var stats = BommenBepaler.BepaalBommenMulti2(deVakjesArray, TestBotConfig());
             stats.Log(logger);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
@@ -139,7 +139,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, TestBotConfig());
+            var stats = BommenBepaler.BepaalBommenMulti2(deVakjesArray, TestBotConfig());
             stats.Log(logger);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
@@ -182,7 +182,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, TestBotConfig());
+            var stats = BommenBepaler.BepaalBommenMulti2(deVakjesArray, TestBotConfig());
             stats.Log(logger);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
@@ -224,7 +224,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, TestBotConfig());
+            var stats = BommenBepaler.BepaalBommenMulti2(deVakjesArray, TestBotConfig());
             stats.Log(logger);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
@@ -233,7 +233,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
             GalaxyVisualizator.RenderToConsole(deVakjesArray, logger);
 
             Assert.Equal(5, flattened.Count(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom));
-            Assert.Equal(4, flattened.Count(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedNoBom));
+            Assert.Equal(7, flattened.Count(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedNoBom));
         }
 
         [Fact]
@@ -267,7 +267,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, TestBotConfig());
+            var stats = BommenBepaler.BepaalBommenMulti2(deVakjesArray, TestBotConfig());
             stats.Log(logger);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
@@ -309,7 +309,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, TestBotConfig());
+            var stats = BommenBepaler.BepaalBommenMulti2(deVakjesArray, TestBotConfig());
             stats.Log(logger);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
@@ -352,7 +352,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, TestBotConfig());
+            var stats = BommenBepaler.BepaalBommenMulti2(deVakjesArray, TestBotConfig());
             stats.Log(logger);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
@@ -394,7 +394,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, TestBotConfig());
+            var stats = BommenBepaler.BepaalBommenMulti2(deVakjesArray, TestBotConfig());
             stats.Log(logger);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
@@ -436,7 +436,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, TestBotConfig());
+            var stats = BommenBepaler.BepaalBommenMulti2(deVakjesArray, TestBotConfig());
             stats.Log(logger);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
@@ -478,7 +478,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, TestBotConfig());
+            var stats = BommenBepaler.BepaalBommenMulti2(deVakjesArray, TestBotConfig());
             stats.Log(logger);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
@@ -519,7 +519,7 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
 
-            var stats = BommenBepaler.BepaalBommenMulti(deVakjesArray, TestBotConfig());
+            var stats = BommenBepaler.BepaalBommenMulti2(deVakjesArray, TestBotConfig());
             stats.Log(logger);
 
             var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();

@@ -81,6 +81,7 @@ namespace DeveSparkleyGalaxySweeperBot
             stats.Iteraties.Add(initialIteratie);
 
             var flatVakjes = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null);
+            var allSets = new List<VakjeSetDeluxe>();
             foreach (var vakje in flatVakjes)
             {
                 if (vakje.IsNumber)
@@ -91,7 +92,7 @@ namespace DeveSparkleyGalaxySweeperBot
 
                     var bommenInDitSet = vakje.Number - revealedBommenOmMeHeen.Count;
                     var nietBommenInDitSet = unrevealedTilesOmMeHeen.Count - bommenInDitSet;
-                    AddSetDeluxe(new List<VakjeSetDeluxe>(), initialIteratie, bommenInDitSet, nietBommenInDitSet, unrevealedTilesOmMeHeen);
+                    AddSetDeluxe(allSets, initialIteratie, bommenInDitSet, nietBommenInDitSet, unrevealedTilesOmMeHeen);
                 }
             }
 
@@ -104,10 +105,10 @@ namespace DeveSparkleyGalaxySweeperBot
                 stats.Iteraties.Add(iteratie);
                 doorGaan = iteratie.Vondsten.Any();
                 iteraties++;
-                BepaalBommenBasedOnSetsDeluxe(flatVakjes);
-                GalaxyVisualizator.RenderToConsole(deVakjesArray, DefaultLoggerFactory.CreateLoggerForTests());
+                //GalaxyVisualizator.RenderToConsole(deVakjesArray, DefaultLoggerFactory.CreateLoggerForTests());
             }
 
+            BepaalBommenBasedOnSetsDeluxe(flatVakjes);
 
             Debug.WriteLine($"Totaal iteraties: {iteraties}");
             return stats;
@@ -242,7 +243,7 @@ namespace DeveSparkleyGalaxySweeperBot
                 var changed = AddSetDeluxe(allSets, iteratie, newSet.MinCountGuaranteedBombs, newSet.MinCountGuaranteedNotBombs, newSet.Vakjes);
                 if (changed)
                 {
-                    Debug.WriteLine("Added set");
+                    //Debug.WriteLine("Added set");
                     iteratie.Vondsten.Add(new BommenBepalerStatsIteratieVondst(iteratie, newSet.Vakjes.First(), VondstType.SetsBasedGuaranteedBomb));
                 }
             }

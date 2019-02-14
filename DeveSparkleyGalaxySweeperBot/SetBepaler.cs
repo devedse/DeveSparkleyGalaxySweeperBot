@@ -17,8 +17,6 @@ namespace DeveSparkleyGalaxySweeperBot
 
         private static List<List<IntersectionAndSet>> BepaalSetsThatFillMeCompletely(VakjeSetDeluxe deOverallSet, List<VakjeSetDeluxe> lijstMetAlleSets, List<IntersectionAndSet> current)
         {
-            Debug.WriteLine("Iteratie");
-
             if (current.SelectMany(t => t.Intersection).Count() == deOverallSet.Vakjes.Count)
             {
                 return new List<List<IntersectionAndSet>>() { current };
@@ -54,8 +52,6 @@ namespace DeveSparkleyGalaxySweeperBot
 
         private static List<List<IntersectionAndSet>> BepaalSetsThatDontFillMeCompletely(VakjeSetDeluxe deOverallSet, List<VakjeSetDeluxe> lijstMetAlleSets, List<IntersectionAndSet> current)
         {
-            Debug.WriteLine("Iteratie");
-
             if (current.SelectMany(t => t.Intersection).Count() == deOverallSet.Vakjes.Count)
             {
                 return new List<List<IntersectionAndSet>>() { current };
@@ -93,10 +89,10 @@ namespace DeveSparkleyGalaxySweeperBot
                 {
                     setGroups.Add(itemToAdd);
                 }
-                else
-                {
-                    Debug.WriteLine("Item already exists");
-                }
+                //else
+                //{
+                //    Debug.WriteLine("Item already exists");
+                //}
             }
             return setGroups;
         }
