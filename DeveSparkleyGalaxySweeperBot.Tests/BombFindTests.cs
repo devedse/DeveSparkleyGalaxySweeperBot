@@ -611,5 +611,46 @@ namespace DeveSparkleyGalaxySweeperBot.Tests
 
             Assert.Equal(4, flattened.Count(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom));
         }
+
+        [Fact]
+        public void FindsThisOneThatSjoerdsOneDoesToo()
+        {
+            var logger = DefaultLoggerFactory.CreateLoggerForTests();
+
+            string[] data = new[] { "########B21000000",
+                                    "#######13R2000000",
+                                    "######11RB1011000",
+                                    "#####B23R201R2121",
+                                    "####B3R42113R2BB2",
+                                    "###B33RR3R2R22B3B",
+                                    "##13B23R4211.113B",
+                                    "#.1R213BB2....1RR",
+                                    ".1211R3BB31.1124R",
+                                    "1R1.1124BB11R2R2#",
+                                    "11...1R22212321##",
+                                    ".....11.1R2RB1###",
+                                    "..121...11132####",
+                                    ".1BR2.....1B#####",
+                                    ".12..4...12######",
+                                    "......3.1B#######",
+                                    "....2...1########"};
+
+            var game = new GalaxySweeperGame
+            {
+                field = data.ToList()
+            };
+
+            var deVakjesArray = GalaxyGameHelper.CreateVakjesArray(game);
+
+            var stats = BommenBepaler.BepaalBommenMulti2(deVakjesArray, TestBotConfig());
+            stats.Log(logger);
+
+            var flattened = TwoDimensionalArrayHelper.Flatten(deVakjesArray).Where(t => t != null).ToList();
+
+            LogTopBombs(flattened, logger);
+            GalaxyVisualizator.RenderToConsole(deVakjesArray, logger);
+
+            Assert.Equal(3, flattened.Count(t => t.VakjeBerekeningen.BerekendVakjeType == BerekendVakjeType.GuaranteedBom));
+        }
     }
 }
