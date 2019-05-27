@@ -1,4 +1,5 @@
-﻿using DeveSparkleyGalaxySweeperBot.Config;
+﻿using DeveCoolLib.DeveConsoleMenu;
+using DeveSparkleyGalaxySweeperBot.Config;
 using DeveSparkleyGalaxySweeperBot.Logging;
 using DeveSparkleyGalaxySweeperBot.Models;
 using Newtonsoft.Json;
@@ -12,10 +13,12 @@ namespace DeveSparkleyGalaxySweeperBot.Runner
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("The bot is starting");
 
-            StartBot();
-            DoeIetsAnders();
+            var logger = CreateLogger();
+
+            StartBot(logger);
+            DoeIetsAnders(logger);
 
             Console.WriteLine("Press any key to exit the application");
             Console.ReadLine();
@@ -23,7 +26,18 @@ namespace DeveSparkleyGalaxySweeperBot.Runner
 
         private static ILogger CreateLogger()
         {
-            return DefaultLoggerFactory.CreateLoggerForConsoleApp();
+            ILogger selectedLogger = null;
+
+            Console.WriteLine();
+
+            var selectLoggerMenu = new ConsoleMenu(ConsoleMenuType.KeyPress);
+            selectLoggerMenu.MenuOptions.Add(new ConsoleMenuOption("Color Logger", () => selectedLogger = DefaultLoggerFactory.CreateLoggerForConsoleApp()));
+            selectLoggerMenu.MenuOptions.Add(new ConsoleMenuOption("FaST Logger", () => selectedLogger = DefaultLoggerFactory.CreateLoggerForConsoleAppFast()));
+
+            selectLoggerMenu.RenderMenu();
+            selectLoggerMenu.WaitForResult();
+
+            return selectedLogger;
         }
 
         private static BotConfig CreateBotConfig()
@@ -31,17 +45,14 @@ namespace DeveSparkleyGalaxySweeperBot.Runner
             return BotConfig.Level9;
         }
 
-        public static void StartBot()
+        public static void StartBot(ILogger logger)
         {
-            var logger = CreateLogger();
             var a = new GalaxySweeperBotFlow(GalaxySweeperConfig.AccessToken, CreateBotConfig(), logger);
             a.StartBot();
         }
 
-        public static void DoeIetsAnders()
+        public static void DoeIetsAnders(ILogger logger)
         {
-            var logger = CreateLogger();
-
             var galaxySweeperApiHelper = new GalaxySweeperApiHelper(GalaxySweeperConfig.AccessToken, logger);
             var galaxySweeperBot = new GalaxySweeperBot(galaxySweeperApiHelper, CreateBotConfig(), logger);
 
