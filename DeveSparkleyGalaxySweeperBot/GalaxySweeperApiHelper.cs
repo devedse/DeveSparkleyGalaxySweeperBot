@@ -36,8 +36,15 @@ namespace DeveSparkleyGalaxySweeperBot
 
             Task.Delay(0).Wait();
 
-            var content = new StringContent("{row: " + row + ", column: " + column + "}", Encoding.UTF8, "application/json");
+            var content = new StringContent("{\"row\": " + row + ", \"column\": " + column + "}", Encoding.UTF8, "application/json");
             var result = _httpClient.PostAsync($"https://galaxysweeper.com/api/games/{gameId}/sweep", content).Result;
+
+            var resultStringetje = result.Content.ReadAsStringAsync().Result;
+
+            if (!result.IsSuccessStatusCode)
+            {
+                logger.WriteLine($"sweep failed: {resultStringetje}");
+            }
         }
 
         public void AcceptInvite(string oponentToken)
